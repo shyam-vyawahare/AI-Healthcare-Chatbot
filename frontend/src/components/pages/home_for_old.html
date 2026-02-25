@@ -1,0 +1,1202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HealthAssist AI | Public Health Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #1976d2;
+            --primary-dark: #1565c0;
+            --primary-light: #42a5f5;
+            --secondary: #d32f2f;
+            --accent: #ff8f00;
+            --light-bg: #f8f9fa;
+            --white: #ffffff;
+            --text: #333333;
+            --text-light: #666666;
+            --text-muted: #888888;
+            --border: #e0e0e0;
+            --shadow: rgba(0, 0, 0, 0.08);
+            --success: #4caf50;
+            --warning: #ff9800;
+            --card-bg: #ffffff;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background-color: var(--light-bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header Styles */
+        header {
+            background-color: var(--white);
+            box-shadow: 0 2px 15px var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary-dark);
+            text-decoration: none;
+        }
+        
+        .logo-icon {
+            color: var(--primary);
+            font-size: 2rem;
+        }
+        
+        .logo span {
+            color: var(--primary);
+        }
+        
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: var(--white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+        
+        .logout-btn {
+            background: transparent;
+            color: var(--text);
+            border: 1px solid var(--border);
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .logout-btn:hover {
+            background: var(--light-bg);
+        }
+        
+        /* Dashboard Layout */
+        .dashboard {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 20px;
+            padding: 30px 0;
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            background: var(--white);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 5px 15px var(--shadow);
+            height: fit-content;
+            position: sticky;
+            top: 90px;
+        }
+        
+        .sidebar-menu {
+            list-style: none;
+        }
+        
+        .sidebar-menu li {
+            margin-bottom: 10px;
+        }
+        
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 15px;
+            text-decoration: none;
+            color: var(--text);
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+        
+        .sidebar-menu a:hover, .sidebar-menu a.active {
+            background: rgba(25, 118, 210, 0.1);
+            color: var(--primary);
+        }
+        
+        .sidebar-menu i {
+            width: 20px;
+            text-align: center;
+        }
+        
+        /* Main Content */
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+        
+        .welcome-banner {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: var(--white);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px var(--shadow);
+        }
+        
+        .welcome-banner h1 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        
+        .welcome-banner p {
+            opacity: 0.9;
+            max-width: 600px;
+        }
+        
+        .stats-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+        
+        .stat-card {
+            background: var(--white);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px var(--shadow);
+            text-align: center;
+            transition: transform 0.3s;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: rgba(25, 118, 210, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+        
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+        
+        /* Features Grid */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .feature-card {
+            background: var(--white);
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 5px 15px var(--shadow);
+            transition: all 0.3s;
+            border-left: 4px solid var(--primary);
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px var(--shadow);
+        }
+        
+        .feature-card h3 {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+            color: var(--primary-dark);
+        }
+        
+        .feature-card i {
+            color: var(--primary);
+        }
+        
+        .feature-card p {
+            color: var(--text-light);
+            margin-bottom: 15px;
+        }
+        
+        .feature-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+            transition: gap 0.3s;
+        }
+        
+        .feature-link:hover {
+            gap: 10px;
+        }
+        
+        /* Quick Actions */
+        .quick-actions {
+            background: var(--white);
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 5px 15px var(--shadow);
+        }
+        
+        .quick-actions h2 {
+            margin-bottom: 20px;
+            color: var(--primary-dark);
+        }
+        
+        .action-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        
+        .action-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: var(--light-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            text-decoration: none;
+            color: var(--text);
+            transition: all 0.3s;
+            text-align: center;
+        }
+        
+        .action-btn:hover {
+            background: var(--primary);
+            color: var(--white);
+            transform: translateY(-3px);
+        }
+        
+        .action-btn i {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        
+        .chatbot-widget {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, #3498db, #2ecc71);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            transition: all 0.3s ease;
+            animation: pulse 2s infinite;
+        }
+
+        .chatbot-widget:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .chatbot-widget i {
+            font-size: 30px;
+            color: white;
+        }
+
+        .chatbot-container {
+            position: fixed;
+            bottom: 120px;
+            right: 30px;
+            width: 400px;
+            height: 600px;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            display: none;
+            flex-direction: column;
+            z-index: 1000;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .chatbot-container.active {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .chatbot-header {
+            background: linear-gradient(135deg, #3498db, #2ecc71);
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 15px 15px 0 0;
+        }
+
+        .chatbot-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .chatbot-title i {
+            font-size: 1.3rem;
+        }
+
+        .close-chatbot {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .close-chatbot:hover {
+            transform: scale(1.2);
+        }
+
+        .chatbot-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            background-color: #f8f9fa;
+        }
+
+        .message {
+            max-width: 80%;
+            padding: 12px 16px;
+            border-radius: 18px;
+            line-height: 1.4;
+            position: relative;
+            animation: messageAppear 0.3s ease;
+        }
+
+        .user-message {
+            align-self: flex-end;
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            border-bottom-right-radius: 5px;
+        }
+
+        .bot-message {
+            align-self: flex-start;
+            background-color: white;
+            color: #2c3e50;
+            border: 1px solid #e0e0e0;
+            border-bottom-left-radius: 5px;
+        }
+
+        .typing-indicator {
+            display: flex;
+            align-self: flex-start;
+            background-color: white;
+            padding: 12px 16px;
+            border-radius: 18px;
+            border-bottom-left-radius: 5px;
+            border: 1px solid #e0e0e0;
+            max-width: 80%;
+        }
+
+        .typing-indicator span {
+            height: 8px;
+            width: 8px;
+            background-color: #95a5a6;
+            border-radius: 50%;
+            display: inline-block;
+            margin: 0 2px;
+            animation: typing 1.5s infinite;
+        }
+
+        .typing-indicator span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-indicator span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        .chatbot-input {
+            display: flex;
+            padding: 15px;
+            background-color: white;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .chatbot-input input {
+            flex: 1;
+            padding: 12px 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 25px;
+            outline: none;
+            font-size: 0.95rem;
+            transition: border-color 0.3s;
+        }
+
+        .chatbot-input input:focus {
+            border-color: #3498db;
+        }
+
+        .chatbot-input button {
+            background: linear-gradient(135deg, #3498db, #2ecc71);
+            color: white;
+            border: none;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            margin-left: 10px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .chatbot-input button:hover {
+            transform: scale(1.05);
+        }
+
+        .quick-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            padding: 0 15px 15px;
+            background-color: white;
+        }
+
+        .quick-option {
+            background-color: #e8f4fc;
+            border: 1px solid #3498db;
+            color: #2980b9;
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .quick-option:hover {
+            background-color: #3498db;
+            color: white;
+        }
+
+        .disclaimer {
+            font-size: 0.7rem;
+            color: #7f8c8d;
+            text-align: center;
+            padding: 10px 15px;
+            background-color: #f8f9fa;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(52, 152, 219, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(52, 152, 219, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(52, 152, 219, 0); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes messageAppear {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes typing {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        @media (max-width: 500px) {
+            .chatbot-container {
+                width: 90vw;
+                height: 70vh;
+                right: 5vw;
+                bottom: 100px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .header p {
+                font-size: 1rem;
+            }
+        }
+        /* Footer */
+        footer {
+            background: var(--white);
+            padding: 30px 0;
+            margin-top: 50px;
+            border-top: 1px solid var(--border);
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+        }
+        
+        .footer-column h3 {
+            margin-bottom: 15px;
+            color: var(--primary-dark);
+        }
+        
+        .footer-column ul {
+            list-style: none;
+        }
+        
+        .footer-column ul li {
+            margin-bottom: 10px;
+        }
+        
+        .footer-column ul li a {
+            color: var(--text-light);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-column ul li a:hover {
+            color: var(--primary);
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 20px;
+            margin-top: 20px;
+            border-top: 1px solid var(--border);
+            color: var(--text-muted);
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+            
+            .sidebar {
+                position: static;
+                margin-bottom: 20px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .user-menu {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .action-buttons {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .chatbot-container {
+                width: 90%;
+                right: 5%;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .action-buttons {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-cards {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="#" class="logo">
+                    <i class="fas fa-heartbeat logo-icon"></i>
+                    Health<span>Assist</span> AI
+                </a>
+                <div class="user-menu">
+                    <div class="user-info">
+                        <div class="user-avatar">PS</div>
+                        <div>
+                            <div>Suyesh Popale</div>
+                            <small>Patient, Maharashtra</small>
+                        </div>
+                    </div>
+                    <a href="landing.html" class="logout-btn">
+                        <i class="fas fa-sign-out-alt"></i> <span data-en="Logout" data-oriya="ଲଗଆଉଟ୍">Logout</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Dashboard -->
+    <div class="container">
+        <div class="dashboard">
+            <!-- Sidebar -->
+            <div class="sidebar">
+                <ul class="sidebar-menu">
+                    <li><a href="#" class="active"><i class="fas fa-home"></i> Dashboard</a></li>
+                    <li><a href="#"><i class="fas fa-stethoscope"></i> Symptom Checker</a></li>
+                    <li><a href="#"><i class="fas fa-pills"></i> Medicine Finder</a></li>
+                    <li><a href="#"><i class="fas fa-map-marker-alt"></i> Nearby Services</a></li>
+                    <li><a href="#"><i class="fas fa-user-md"></i> Doctor Consultation</a></li>
+                    <li><a href="#"><i class="fas fa-first-aid"></i> First Aid Resources</a></li>
+                    <li><a href="#"><i class="fas fa-bell"></i> Health Alerts</a></li>
+                    <li><a href="#"><i class="fas fa-cog"></i> Settings</a></li>
+                </ul>
+            </div>
+
+            <!-- Main Content -->
+            <div class="main-content">
+                <!-- Welcome Banner -->
+                <div class="welcome-banner">
+                    <h1>Welcome to HealthAssist AI, Suyesh!</h1>
+                    <p>Your health assistant is here to help with symptom checking, medicine information, and connecting you to healthcare services.</p>
+                </div>
+
+                <!-- Stats Cards -->
+                <div class="stats-cards">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-heartbeat"></i>
+                        </div>
+                        <div class="stat-value">Good</div>
+                        <div class="stat-label">Health Status</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-pills"></i>
+                        </div>
+                        <div class="stat-value">2</div>
+                        <div class="stat-label">Active Medications</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-calendar-check"></i>
+                        </div>
+                        <div class="stat-value">1</div>
+                        <div class="stat-label">Upcoming Appointments</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <div class="stat-value">85%</div>
+                        <div class="stat-label">Vaccination Complete</div>
+                    </div>
+                </div>
+
+                <!-- Features Grid -->
+                <div class="features-grid">
+                    <!-- Symptom Checker -->
+                    <div class="feature-card">
+                        <h3><i class="fas fa-stethoscope"></i> Symptom Checker</h3>
+                        <p>Describe your symptoms and get AI-powered assessment of possible conditions with recommended actions.</p>
+                        <a href="s_checker.html" class="feature-link">Check Symptoms <i class="fas fa-arrow-right"></i></a>
+                    </div>
+
+                    <!-- Medicine Finder -->
+                    <div class="feature-card">
+                        <h3><i class="fas fa-pills"></i> Medicine Finder</h3>
+                        <p>Search for medicines, check availability at nearby pharmacies, and compare prices for generic alternatives.</p>
+                        <a href="m_finder.html" class="feature-link">Find Medicines <i class="fas fa-arrow-right"></i></a>
+                    </div>
+
+                    <!-- Nearby Services -->
+                    <div class="feature-card">
+                        <h3><i class="fas fa-map-marker-alt"></i> Nearby Services</h3>
+                        <p>Find hospitals, clinics, pharmacies, and emergency services in your area with directions and contact info.</p>
+                        <a href="N_Services.html" class="feature-link">Explore Services <i class="fas fa-arrow-right"></i></a>
+                    </div>
+
+                    <!-- Doctor Consultation -->
+                    <div class="feature-card">
+                        <h3><i class="fas fa-user-md"></i> Doctor Consultation</h3>
+                        <p>Book appointments with doctors, get online consultations, and access your medical history.</p>
+                        <a href="D_Consultation" class="feature-link">Book Consultation <i class="fas fa-arrow-right"></i></a>
+                    </div>
+
+                    <!-- First Aid Resources -->
+                    <div class="feature-card">
+                        <h3><i class="fas fa-first-aid"></i> First Aid Resources</h3>
+                        <p>Step-by-step guides and video tutorials for handling common emergencies and health situations.</p>
+                        <a href="FIR.html" class="feature-link">Learn First Aid <i class="fas fa-arrow-right"></i></a>
+                    </div>
+
+                    <!-- Health Alerts -->
+                    <div class="feature-card">
+                        <h3><i class="fas fa-bell"></i> Health Alerts</h3>
+                        <p>Stay informed about disease outbreaks, vaccination campaigns, and public health advisories in your area.</p>
+                        <a href="H-Alerts.html" class="feature-link">View Alerts <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="quick-actions">
+                    <h2>Quick Actions</h2>
+                    <div class="action-buttons">
+                        <a href="#" class="action-btn">
+                            <i class="fas fa-ambulance"></i>
+                            <span>Emergency Services</span>
+                        </a>
+                        <a href="#" class="action-btn">
+                            <i class="fas fa-prescription"></i>
+                            <span>Order Medicines</span>
+                        </a>
+                        <a href="#" class="action-btn">
+                            <i class="fas fa-video"></i>
+                            <span>Video Consultation</span>
+                        </a>
+                        <a href="#" class="action-btn">
+                            <i class="fas fa-file-medical"></i>
+                            <span>Health Records</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI Chatbot Widget -->
+    <div class="chatbot-widget" id="chatbotToggle">
+        <i class="fas fa-robot"></i>
+    </div>
+
+    <div class="chatbot-container" id="chatbotContainer">
+        <div class="chatbot-header">
+            <div class="chatbot-title">
+                <i class="fas fa-robot"></i>
+                <span>HealthMitra AI Assistant</span>
+            </div>
+            <button class="close-chatbot" id="closeChatbot">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="chatbot-messages" id="chatbotMessages">
+            <div class="message bot-message">
+                Hello! I'm HealthMitra, your AI health assistant. I'm here to provide information about common diseases and help you understand symptoms. How can I assist you today?
+            </div>
+            <div class="message bot-message">
+                You can ask me about symptoms, diseases, prevention tips, or use the quick options below.
+            </div>
+        </div>
+        <div class="quick-options" id="quickOptions">
+            <div class="quick-option" data-option="fever">Fever & Cold</div>
+            <div class="quick-option" data-option="headache">Headache</div>
+            <div class="quick-option" data-option="stomach">Stomach Issues</div>
+            <div class="quick-option" data-option="covid">COVID-19</div>
+            <div class="quick-option" data-option="diabetes">Diabetes</div>
+            <div class="quick-option" data-option="hypertension">Hypertension</div>
+        </div>
+        <div class="chatbot-input">
+            <input type="text" id="chatbotInput" placeholder="Describe your symptoms or ask a health question...">
+            <button id="sendMessage"><i class="fas fa-paper-plane"></i></button>
+        </div>
+        <div class="disclaimer">
+            Note: HealthMitra provides informational support only. Please consult a healthcare professional for medical advice.
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const chatbotToggle = document.getElementById('chatbotToggle');
+            const chatbotContainer = document.getElementById('chatbotContainer');
+            const closeChatbot = document.getElementById('closeChatbot');
+            const chatbotMessages = document.getElementById('chatbotMessages');
+            const chatbotInput = document.getElementById('chatbotInput');
+            const sendMessage = document.getElementById('sendMessage');
+            const quickOptions = document.getElementById('quickOptions');
+            
+            // Toggle chatbot visibility
+            chatbotToggle.addEventListener('click', function() {
+                chatbotContainer.classList.add('active');
+            });
+            
+            closeChatbot.addEventListener('click', function() {
+                chatbotContainer.classList.remove('active');
+            });
+            
+            // Send message on button click
+            sendMessage.addEventListener('click', function() {
+                sendUserMessage();
+            });
+            
+            // Send message on Enter key
+            chatbotInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    sendUserMessage();
+                }
+            });
+            
+            // Quick options functionality
+            quickOptions.querySelectorAll('.quick-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    const optionText = this.textContent;
+                    chatbotInput.value = optionText;
+                    sendUserMessage();
+                });
+            });
+            
+            function sendUserMessage() {
+                const message = chatbotInput.value.trim();
+                if (message === '') return;
+                
+                // Add user message to chat
+                addMessage(message, 'user');
+                chatbotInput.value = '';
+                
+                // Show typing indicator
+                showTypingIndicator();
+                
+                // Simulate AI response after a delay
+                setTimeout(() => {
+                    removeTypingIndicator();
+                    const response = generateResponse(message);
+                    addMessage(response, 'bot');
+                    
+                    // Scroll to bottom of messages
+                    chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+                }, 1500);
+            }
+            
+            function addMessage(text, sender) {
+                const messageElement = document.createElement('div');
+                messageElement.classList.add('message', `${sender}-message`);
+                messageElement.textContent = text;
+                chatbotMessages.appendChild(messageElement);
+                
+                // Scroll to bottom of messages
+                chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+            }
+            
+            function showTypingIndicator() {
+                const typingElement = document.createElement('div');
+                typingElement.classList.add('typing-indicator');
+                typingElement.id = 'typingIndicator';
+                typingElement.innerHTML = '<span></span><span></span><span></span>';
+                chatbotMessages.appendChild(typingElement);
+                
+                // Scroll to bottom of messages
+                chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+            }
+            
+            function removeTypingIndicator() {
+                const typingIndicator = document.getElementById('typingIndicator');
+                if (typingIndicator) {
+                    typingIndicator.remove();
+                }
+            }
+            
+            function generateResponse(userMessage) {
+                const lowerMessage = userMessage.toLowerCase();
+                
+                // Greeting responses
+                if (lowerMessage.includes('hello') || lowerMessage.includes('hi') || lowerMessage.includes('hey')) {
+                    return getRandomResponse([
+                        "Hello! How can I assist with your health concerns today?",
+                        "Hi there! I'm here to help with health-related questions. What's on your mind?",
+                        "Hey! I'm HealthMitra. How can I help you today?"
+                    ]);
+                }
+                
+                // Fever and cold responses
+                if (lowerMessage.includes('fever') || lowerMessage.includes('cold') || lowerMessage.includes('flu')) {
+                    return getRandomResponse([
+                        "Fever is usually a sign that your body is fighting an infection. Common causes include viral infections like cold or flu. Make sure to rest, stay hydrated, and monitor your temperature. If it persists for more than 3 days or is very high, consult a doctor.",
+                        "For cold and flu symptoms, getting plenty of rest, drinking fluids, and using over-the-counter remedies can help. A fever is your body's natural response to infection. If your temperature exceeds 102°F (39°C) or doesn't improve, seek medical attention.",
+                        "Fever with cold symptoms is common. Try to rest, drink warm fluids, and consider fever reducers if uncomfortable. Watch for difficulty breathing or persistent high fever, which would require medical evaluation."
+                    ]);
+                }
+                
+                // Headache responses
+                if (lowerMessage.includes('headache') || lowerMessage.includes('migraine')) {
+                    return getRandomResponse([
+                        "Headaches can have various causes including tension, dehydration, or sinus issues. Try resting in a quiet room, staying hydrated, and applying a cool compress. If headaches are severe, frequent, or accompanied by other symptoms, consult a healthcare provider.",
+                        "For headaches, ensure you're drinking enough water and getting adequate rest. Over-the-counter pain relievers may help, but if headaches persist or worsen, it's important to see a doctor to rule out underlying conditions.",
+                        "Migraines often involve throbbing pain, sensitivity to light/sound. Keeping a headache diary can help identify triggers. If you experience sudden severe headache or headache with vision changes, seek immediate medical care."
+                    ]);
+                }
+                
+                // Stomach issues responses
+                if (lowerMessage.includes('stomach') || lowerMessage.includes('nausea') || lowerMessage.includes('diarrhea') || lowerMessage.includes('vomit')) {
+                    return getRandomResponse([
+                        "Stomach issues can result from food intolerance, infection, or stress. Try the BRAT diet (bananas, rice, applesauce, toast) for upset stomach, and stay hydrated. If symptoms are severe or persist beyond 48 hours, consult a doctor.",
+                        "For nausea and stomach discomfort, ginger tea or crackers might help. Avoid spicy, fatty foods. Persistent vomiting or diarrhea can lead to dehydration, so watch for signs like dizziness or decreased urination.",
+                        "Stomach problems often resolve with rest and simple foods. If you experience severe abdominal pain, blood in vomit or stool, or symptoms lasting more than a couple days, seek medical attention promptly."
+                    ]);
+                }
+                
+                // COVID-19 responses
+                if (lowerMessage.includes('covid') || lowerMessage.includes('coronavirus')) {
+                    return getRandomResponse([
+                        "COVID-19 symptoms can include fever, cough, fatigue, loss of taste/smell, and difficulty breathing. If you suspect COVID-19, consider testing, isolate from others, and monitor symptoms. Seek emergency care for severe breathing problems or persistent chest pain.",
+                        "For COVID-19, rest, hydration, and over-the-counter fever reducers can help manage mild symptoms. Watch for warning signs like trouble breathing, confusion, or bluish lips which require immediate medical attention.",
+                        "COVID-19 affects people differently. Most experience mild to moderate symptoms and recover with rest. However, those with underlying conditions or severe symptoms should consult healthcare providers. Vaccination remains the best protection."
+                    ]);
+                }
+                
+                // Diabetes responses
+                if (lowerMessage.includes('diabetes') || lowerMessage.includes('blood sugar')) {
+                    return getRandomResponse([
+                        "Diabetes is a chronic condition affecting how your body processes blood sugar. Symptoms can include increased thirst, frequent urination, and fatigue. Management typically involves medication, diet control, and regular monitoring. Consult a doctor for proper diagnosis and treatment.",
+                        "For diabetes management, maintaining a balanced diet, regular exercise, and medication adherence are crucial. Regular blood sugar monitoring helps prevent complications. If you experience extremely high or low blood sugar levels, seek medical help immediately.",
+                        "Diabetes requires careful management to prevent complications. Work with healthcare providers to develop a personalized plan. Watch for symptoms of high blood sugar (excessive thirst, fatigue) or low blood sugar (shaking, confusion) and respond appropriately."
+                    ]);
+                }
+                
+                // Hypertension responses
+                if (lowerMessage.includes('hypertension') || lowerMessage.includes('high blood pressure') || lowerMessage.includes('blood pressure')) {
+                    return getRandomResponse([
+                        "Hypertension (high blood pressure) often has no symptoms but can lead to serious health issues. Management includes lifestyle changes like reducing salt intake, regular exercise, and medication if prescribed. Regular monitoring is important.",
+                        "For hypertension, a heart-healthy diet (low salt, rich in fruits/vegetables), regular physical activity, stress management, and medication adherence are key. Have your blood pressure checked regularly and follow up with your healthcare provider.",
+                        "High blood pressure is a silent condition that increases heart disease and stroke risk. Lifestyle modifications and prescribed medications can effectively control it. If you experience severe headache, chest pain, or vision changes with high BP, seek immediate care."
+                    ]);
+                }
+                
+                // General health advice
+                if (lowerMessage.includes('prevent') || lowerMessage.includes('avoid') || lowerMessage.includes('healthy')) {
+                    return getRandomResponse([
+                        "Maintaining good health involves balanced nutrition, regular exercise, adequate sleep, stress management, and avoiding harmful habits like smoking. Regular health check-ups help detect issues early.",
+                        "Prevention is key to long-term health. Focus on a nutrient-rich diet, physical activity, proper hydration, and good sleep hygiene. Don't skip recommended screenings and vaccinations.",
+                        "A healthy lifestyle includes mindful eating, staying active, managing stress, and getting enough rest. Remember that mental health is as important as physical health for overall wellbeing."
+                    ]);
+                }
+                
+                // Thank you responses
+                if (lowerMessage.includes('thank') || lowerMessage.includes('thanks')) {
+                    return getRandomResponse([
+                        "You're welcome! I'm glad I could help. Feel free to ask if you have more health questions.",
+                        "You're welcome! Take care of your health and don't hesitate to reach out if you need more information.",
+                        "Happy to help! Remember that I'm here whenever you have health-related questions."
+                    ]);
+                }
+                
+                // Default response for unrecognized queries
+                return getRandomResponse([
+                    "I'm designed to provide general health information. For specific symptoms or conditions, it's always best to consult with a healthcare professional who can evaluate your individual situation.",
+                    "I understand you're asking about health concerns. While I can provide general information, a healthcare provider can give you personalized advice based on your specific situation.",
+                    "That's an important health question. For accurate diagnosis and treatment, I recommend consulting with a medical professional who can assess your individual needs.",
+                    "I'm here to help with health awareness. For medical advice tailored to your situation, it's best to speak directly with a healthcare provider."
+                ]);
+            }
+            
+            function getRandomResponse(responses) {
+                return responses[Math.floor(Math.random() * responses.length)];
+            }
+        });
+    </script>
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>HealthAssist AI</h3>
+                    <p>AI-powered healthcare assistance for disease awareness, symptom checking, and connecting you to medical services.</p>
+                </div>
+                <div class="footer-column">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="#">Dashboard</a></li>
+                        <li><a href="#">Symptom Checker</a></li>
+                        <li><a href="#">Medicine Finder</a></li>
+                        <li><a href="#">Doctor Consultation</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Resources</h3>
+                    <ul>
+                        <li><a href="#">First Aid Guides</a></li>
+                        <li><a href="#">Health Articles</a></li>
+                        <li><a href="#">Vaccination Info</a></li>
+                        <li><a href="#">Disease Prevention</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Support</h3>
+                    <ul>
+                        <li><a href="#">Emergency Contacts</a></li>
+                        <li><a href="#">Help Center</a></li>
+                        <li><a href="#">Feedback</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2025 HealthAssist AI. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Chatbot functionality
+        const chatbotToggle = document.getElementById('chatbotToggle');
+        const chatbotContainer = document.getElementById('chatbotContainer');
+        const closeChatbot = document.getElementById('closeChatbot');
+        const chatbotMessages = document.getElementById('chatbotMessages');
+        const chatbotInput = document.getElementById('chatbotInput');
+        const sendMessage = document.getElementById('sendMessage');
+
+        // Toggle chatbot visibility
+        chatbotToggle.addEventListener('click', () => {
+            chatbotContainer.style.display = 'flex';
+        });
+
+        closeChatbot.addEventListener('click', () => {
+            chatbotContainer.style.display = 'none';
+        });
+
+        // Send message function
+        function sendChatbotMessage() {
+            const message = chatbotInput.value.trim();
+            if (message) {
+                // Add user message
+                addMessage(message, 'user');
+                chatbotInput.value = '';
+                
+                // Simulate bot response
+                setTimeout(() => {
+                    const botResponse = generateBotResponse(message);
+                    addMessage(botResponse, 'bot');
+                }, 1000);
+            }
+        }
+
+        // Add message to chat
+        function addMessage(text, sender) {
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('message');
+            messageDiv.classList.add(sender === 'bot' ? 'bot-message' : 'user-message');
+            messageDiv.textContent = text;
+            chatbotMessages.appendChild(messageDiv);
+            chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+        }
+
+        // Generate bot response (simplified)
+        function generateBotResponse(userMessage) {
+            const lowerMessage = userMessage.toLowerCase();
+            
+            if (lowerMessage.includes('fever') || lowerMessage.includes('headache')) {
+                return "Based on your symptoms, it could be a common viral infection. I recommend rest, hydration, and paracetamol if needed. Would you like to consult with a doctor?";
+            } else if (lowerMessage.includes('medicine') || lowerMessage.includes('pill')) {
+                return "I can help you find medicines and check availability at nearby pharmacies. What medication are you looking for?";
+            } else if (lowerMessage.includes('doctor') || lowerMessage.includes('appointment')) {
+                return "I can help you book an appointment with a doctor. Would you prefer an in-person visit or online consultation?";
+            } else if (lowerMessage.includes('emergency') || lowerMessage.includes('ambulance')) {
+                return "For emergencies, I can connect you to nearby hospitals. Would you like me to show emergency contacts in your area?";
+            } else if (lowerMessage.includes('hello') || lowerMessage.includes('hi')) {
+                return "Hello! I'm here to help with health concerns, symptom checking, medicine information, and connecting you to healthcare services.";
+            } else if (lowerMessage.includes('covid') || lowerMessage.includes('vaccine')) {
+                return "I can provide information on COVID-19 symptoms, testing centers, and vaccination availability. What would you like to know?";
+            } else {
+                return "I'm here to help with symptom checking, medicine information, doctor appointments, and emergency services. How can I assist you today?";
+            }
+        }
+
+        // Event listeners for sending messages
+        sendMessage.addEventListener('click', sendChatbotMessage);
+        chatbotInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                sendChatbotMessage();
+            }
+        });
+
+        // Sample welcome message
+        setTimeout(() => {
+            addMessage("I notice you haven't updated your health records recently. Would you like to do that now?", 'bot');
+        }, 3000);
+
+        // Logout functionality
+        document.querySelector('.logout-btn').addEventListener('click', () => {
+            if (confirm('Are you sure you want to logout?')) {
+                alert('Redirecting to login page...');
+                // In a real app, you would redirect to login page
+                // window.location.href = 'login.html';
+            }
+        });
+
+        // Mark active sidebar link
+        document.querySelectorAll('.sidebar-menu a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                document.querySelectorAll('.sidebar-menu a').forEach(item => {
+                    item.classList.remove('active');
+                });
+                this.classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>

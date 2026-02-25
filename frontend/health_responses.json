@@ -1,0 +1,15 @@
+{
+    "greetings": [
+      "Hello! How can I help you with your health today?",
+      "Hi! I'm HealthMitra, here to answer your health questions."
+    ],
+    "fever": [
+      "Fever is usually a sign that your body is fighting an infection.",
+      "High fever should not be ignored. Consult a doctor if it persists."
+    ],
+    "headache": [
+      "Headaches may be due to stress or dehydration.",
+      "Migraines can cause throbbing pain and sensitivity to light."
+    ]
+  }
+  

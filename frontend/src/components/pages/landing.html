@@ -1,0 +1,2212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HealthAssist AI | AI-Powered Public Health Chatbot</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Baloo+Bhai+2:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #1976d2;
+            --primary-dark: #1565c0;
+            --primary-light: #42a5f5;
+            --secondary: #d32f2f;
+            --accent: #ff8f00;
+            --light-bg: #f8f9fa;
+            --white: #ffffff;
+            --text: #333333;
+            --text-light: #666666;
+            --text-muted: #888888;
+            --border: #e0e0e0;
+            --shadow: rgba(0, 0, 0, 0.08);
+            --success: #4caf50;
+            --warning: #ff9800;
+            --card-bg: #ffffff;
+            --gradient-primary: linear-gradient(135deg, #1976d2 0%, #42a5f5 100%);
+            --gradient-secondary: linear-gradient(135deg, #d32f2f 0%, #ff8f00 100%);
+            --gradient-light: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background-color: var(--light-bg);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            line-height: 1.3;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .section {
+            padding: 100px 0;
+            position: relative;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 60px;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .section-title h2 {
+            font-size: 3rem;
+            color: var(--primary-dark);
+            margin-bottom: 20px;
+            position: relative;
+            display: inline-block;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .section-title h2::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background: var(--gradient-primary);
+            border-radius: 2px;
+        }
+        
+        .section-title p {
+            font-size: 1.2rem;
+            color: var(--text-light);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        /* Language Toggle */
+        .language-toggle {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            z-index: 1001;
+            display: flex;
+            background: var(--white);
+            border-radius: 50px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            border: 2px solid var(--primary);
+        }
+        
+        .lang-btn {
+            padding: 10px 15px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            color: var(--primary);
+        }
+        
+        .lang-btn.active {
+            background: var(--primary);
+            color: var(--white);
+        }
+        
+        /* Header Styles */
+        header {
+            background-color: var(--white);
+            box-shadow: 0 2px 15px var(--shadow);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            transition: all 0.3s;
+        }
+        
+        header.scrolled {
+            padding: 5px 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            transition: all 0.3s;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary-dark);
+            text-decoration: none;
+        }
+        
+        .logo-icon {
+            color: var(--primary);
+            font-size: 2rem;
+            transition: transform 0.5s;
+        }
+        
+        .logo:hover .logo-icon {
+            transform: rotate(360deg);
+        }
+        
+        .logo span {
+            color: var(--primary);
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+        
+        nav ul li a {
+            text-decoration: none;
+            color: var(--text);
+            font-weight: 500;
+            transition: color 0.3s;
+            position: relative;
+            padding: 5px 0;
+        }
+        
+        nav ul li a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary);
+            transition: width 0.3s;
+        }
+        
+        nav ul li a:hover {
+            color: var(--primary);
+        }
+        
+        nav ul li a:hover::after {
+            width: 100%;
+        }
+        
+        .auth-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s;
+            display: inline-block;
+            text-align: center;
+            cursor: pointer;
+            border: none;
+            font-size: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s;
+        }
+        
+        .btn:hover::before {
+            left: 100%;
+        }
+        
+        .btn-login {
+            background: transparent;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+        
+        .btn-login:hover {
+            background: rgba(25, 118, 210, 0.05);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(25, 118, 210, 0.2);
+        }
+        
+        .btn-signup {
+            background: var(--gradient-primary);
+            color: var(--white);
+        }
+        
+        .btn-signup:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(25, 118, 210, 0.3);
+        }
+        
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--primary);
+            cursor: pointer;
+        }
+        
+        /* Hero Section */
+        .hero {
+            padding: 180px 0 120px;
+            background: var(--gradient-light);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxkZWZzPjxwYXR0ZXJuIGlkPSJwYXR0ZXJuIiB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiIHBhdHRlcm5UcmFuc2Zvcm09InJvdGF0ZSg0NSkiPjxyZWN0IHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCIgZmlsbD0icmdiYSgyNTUsMjU1LDI1NSwwLjEpIi8+PC9wYXR0ZXJuPjwvZGVmcz48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI3BhdHRlcm4pIi8+PC9zdmc+');
+            opacity: 0.5;
+        }
+        
+        .hero-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .hero-text h1 {
+            font-size: 3.5rem;
+            color: var(--primary-dark);
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .hero-text p {
+            font-size: 1.3rem;
+            color: var(--text-light);
+            margin-bottom: 2.5rem;
+        }
+        
+        .cta-buttons {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+        
+        .btn-primary {
+            background: var(--gradient-primary);
+            color: var(--white);
+            padding: 15px 35px;
+            font-size: 1.1rem;
+            box-shadow: 0 10px 20px rgba(25, 118, 210, 0.2);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(25, 118, 210, 0.3);
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+            padding: 15px 35px;
+            font-size: 1.1rem;
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(25, 118, 210, 0.05);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(25, 118, 210, 0.1);
+        }
+        
+        .stats {
+            display: flex;
+            gap: 2rem;
+        }
+        
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .stat-label {
+            font-size: 1rem;
+            color: var(--text-muted);
+        }
+        
+        .hero-visual {
+            position: relative;
+            text-align: center;
+        }
+        
+        .hero-image {
+            max-width: 100%;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            transform: perspective(1000px) rotateY(-5deg) rotateX(5deg);
+            transition: transform 0.5s;
+        }
+        
+        .hero-visual:hover .hero-image {
+            transform: perspective(1000px) rotateY(0) rotateX(0);
+        }
+        
+        .floating-elements {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+        
+        .floating-element {
+            position: absolute;
+            background: var(--white);
+            border-radius: 50%;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-size: 1.5rem;
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        .floating-element:nth-child(1) {
+            width: 60px;
+            height: 60px;
+            top: 20%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+        
+        .floating-element:nth-child(2) {
+            width: 40px;
+            height: 40px;
+            top: 60%;
+            left: 5%;
+            animation-delay: 2s;
+        }
+        
+        .floating-element:nth-child(3) {
+            width: 50px;
+            height: 50px;
+            top: 40%;
+            right: 10%;
+            animation-delay: 4s;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(10deg); }
+        }
+        
+        /* Features Section */
+        .features {
+            background-color: var(--white);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .features::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxkZWZzPjxwYXR0ZXJuIGlkPSJwYXR0ZXJuIiB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgcGF0dGVyblRyYW5zZm9ybT0icm90YXRlKDEzNSkiPjxyZWN0IHdpZHRoPSI1MCIgaGVpZ2h0PSI1MCIgZmlsbD0icmdiYSgyNTUsMjU1LDI1NSwxKSIvPjxjaXJjbGUgY3g9IjI1IiBjeT0iMjUiIHI9IjEwIiBmaWxsPSJyZ2JhKDI1LDEyMCwyMTAsMC4wNSkiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjcGF0dGVybikiLz48L3N2Zz4=');
+            opacity: 0.3;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2.5rem;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .feature-card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 2.5rem 2rem;
+            text-align: center;
+            transition: all 0.5s;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--border);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: var(--gradient-primary);
+            opacity: 0.05;
+            transition: left 0.5s;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-15px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+        
+        .feature-card:hover::before {
+            left: 0;
+        }
+        
+        .feature-icon {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--gradient-primary);
+            margin: 0 auto 1.5rem;
+            font-size: 2.5rem;
+            color: var(--white);
+            transition: all 0.5s;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .feature-card:hover .feature-icon {
+            transform: scale(1.1) rotate(10deg);
+            box-shadow: 0 10px 20px rgba(25, 118, 210, 0.3);
+        }
+        
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--primary-dark);
+            position: relative;
+            z-index: 2;
+        }
+        
+        .feature-card p {
+            color: var(--text-light);
+            position: relative;
+            z-index: 2;
+        }
+        
+        /* How It Works Section */
+        .how-it-works {
+            background-color: var(--light-bg);
+            position: relative;
+        }
+        
+        .steps {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        .steps::before {
+            content: '';
+            position: absolute;
+            top: 60px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--gradient-primary);
+            z-index: 1;
+        }
+        
+        .step {
+            text-align: center;
+            position: relative;
+            z-index: 2;
+            flex: 1;
+            padding: 0 15px;
+        }
+        
+        .step-number {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: var(--gradient-primary);
+            color: var(--white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin: 0 auto 1.5rem;
+            border: 8px solid var(--light-bg);
+            box-shadow: 0 10px 20px rgba(25, 118, 210, 0.2);
+            transition: all 0.5s;
+        }
+        
+        .step:hover .step-number {
+            transform: scale(1.1);
+            box-shadow: 0 15px 30px rgba(25, 118, 210, 0.3);
+        }
+        
+        .step h3 {
+            margin-bottom: 1rem;
+            color: var(--primary-dark);
+            font-size: 1.3rem;
+        }
+        
+        .step p {
+            color: var(--text-light);
+        }
+        
+        /* Dashboard Preview */
+        .dashboard-preview {
+            background-color: var(--white);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .dashboard-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+        
+        .dashboard-text h2 {
+            font-size: 2.5rem;
+            color: var(--primary-dark);
+            margin-bottom: 1.5rem;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .dashboard-text p {
+            color: var(--text-light);
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+        }
+        
+        .dashboard-visual {
+            background: var(--light-bg);
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .dashboard-visual::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--gradient-primary);
+            opacity: 0.03;
+        }
+        
+        .dashboard-image {
+            width: 100%;
+            border-radius: 10px;
+            transition: transform 0.5s;
+        }
+        
+        .dashboard-visual:hover .dashboard-image {
+            transform: scale(1.02);
+        }
+        
+        /* Testimonials */
+        .testimonials {
+            background-color: var(--light-bg);
+            position: relative;
+        }
+        
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2.5rem;
+        }
+        
+        .testimonial-card {
+            background: var(--white);
+            border-radius: 15px;
+            padding: 2.5rem 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            transition: all 0.5s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .testimonial-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background: var(--gradient-primary);
+            transition: width 0.5s;
+        }
+        
+        .testimonial-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+        
+        .testimonial-card:hover::before {
+            width: 100%;
+            opacity: 0.05;
+        }
+        
+        .testimonial-text {
+            font-style: italic;
+            color: var(--text-light);
+            margin-bottom: 1.5rem;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .testimonial-text::before {
+            content: '"';
+            font-size: 4rem;
+            color: rgba(25, 118, 210, 0.2);
+            position: absolute;
+            top: -20px;
+            left: -10px;
+            line-height: 1;
+            z-index: 1;
+        }
+        
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .author-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--gradient-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+        
+        .author-info h4 {
+            color: var(--primary-dark);
+            margin-bottom: 5px;
+        }
+        
+        .author-info p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+        
+        /* CTA Section */
+        .cta-section {
+            background: var(--gradient-primary);
+            color: var(--white);
+            text-align: center;
+            padding: 120px 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .cta-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxkZWZzPjxwYXR0ZXJuIGlkPSJwYXR0ZXJuIiB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgcj0iMiIgZmlsbD0icmdiYSgyNTUsMjU1LDI1NSwwLjEpIi8+PC9wYXR0ZXJuPjwvZGVmcz48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI3BhdHRlcm4pIi8+PC9zdmc+');
+            opacity: 0.3;
+        }
+        
+        .cta-content {
+            position: relative;
+            z-index: 2;
+        }
+        
+        .cta-content h2 {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .cta-content p {
+            font-size: 1.3rem;
+            margin-bottom: 2.5rem;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+            opacity: 0.9;
+        }
+        
+        .btn-light {
+            background: var(--white);
+            color: var(--primary);
+            padding: 15px 40px;
+            font-size: 1.1rem;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .btn-light:hover {
+            background: rgba(255, 255, 255, 0.9);
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        /* Footer */
+        footer {
+            background: var(--white);
+            padding: 80px 0 30px;
+            border-top: 1px solid var(--border);
+            position: relative;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 3rem;
+        }
+        
+        .footer-about .logo {
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+        }
+        
+        .footer-about p {
+            color: var(--text-light);
+            margin-bottom: 1.5rem;
+            max-width: 300px;
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .social-link {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: var(--light-bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        
+        .social-link:hover {
+            background: var(--gradient-primary);
+            color: var(--white);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(25, 118, 210, 0.3);
+        }
+        
+        .footer-column h4 {
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+            color: var(--primary-dark);
+        }
+        
+        .footer-column ul {
+            list-style: none;
+        }
+        
+        .footer-column ul li {
+            margin-bottom: 0.8rem;
+        }
+        
+        .footer-column ul li a {
+            color: var(--text-light);
+            text-decoration: none;
+            transition: color 0.3s;
+            position: relative;
+            padding-left: 0;
+            transition: padding-left 0.3s;
+        }
+        
+        .footer-column ul li a:hover {
+            color: var(--primary);
+            padding-left: 10px;
+        }
+        
+        .footer-column ul li a::before {
+            content: '▸';
+            position: absolute;
+            left: -10px;
+            opacity: 0;
+            transition: all 0.3s;
+        }
+        
+        .footer-column ul li a:hover::before {
+            left: 0;
+            opacity: 1;
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 3rem;
+            margin-top: 3rem;
+            border-top: 1px solid var(--border);
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+        
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .modal-content {
+            background-color: var(--white);
+            border-radius: 20px;
+            width: 90%;
+            max-width: 450px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            animation: slideUp 0.4s ease;
+            transform: translateY(0);
+        }
+        
+        @keyframes slideUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        .modal-header {
+            background: var(--gradient-primary);
+            color: var(--white);
+            padding: 25px 30px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .modal-header h2 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+        }
+        
+        .modal-header p {
+            opacity: 0.9;
+            font-size: 0.95rem;
+        }
+        
+        .close-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .close-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: rotate(90deg);
+        }
+        
+        .modal-body {
+            max-height: 70vh; 
+            overflow-y: auto;
+            padding: 30px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--text);
+            font-size: 0.95rem;
+        }
+        
+        .input-with-icon {
+            position: relative;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 14px 45px 14px 15px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s;
+            background-color: var(--light-bg);
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.1);
+        }
+        
+        .input-icon {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+        }
+        
+        .forgot-password {
+            text-align: right;
+            margin-top: -10px;
+            margin-bottom: 20px;
+        }
+        
+        .forgot-password a {
+            color: var(--primary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s;
+        }
+        
+        .forgot-password a:hover {
+            color: var(--primary-dark);
+            text-decoration: underline;
+        }
+        
+        .modal-footer {
+            text-align: center;
+            padding: 0 30px 30px;
+        }
+        
+        .modal-footer p {
+            color: var(--text-light);
+            margin-top: 20px;
+            font-size: 0.95rem;
+        }
+        
+        .modal-footer a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+        
+        .modal-footer a:hover {
+            color: var(--primary-dark);
+            text-decoration: underline;
+        }
+        
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 25px 0;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+        
+        .divider::before, .divider::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+        
+        .divider::before {
+            margin-right: 15px;
+        }
+        
+        .divider::after {
+            margin-left: 15px;
+        }
+        
+        .social-login {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        
+        .social-btn {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            background: var(--white);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .social-btn:hover {
+            background: var(--light-bg);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .social-btn i {
+            font-size: 1.2rem;
+            margin-right: 8px;
+        }
+        
+        .google-btn {
+            color: #DB4437;
+        }
+        
+        .facebook-btn {
+            color: #4267B2;
+        }
+        
+        /* Form Validation Styles */
+        .error-message {
+            color: var(--secondary);
+            font-size: 0.85rem;
+            margin-top: 5px;
+            display: none;
+        }
+        
+        .form-control.error {
+            border-color: var(--secondary);
+        }
+        
+        .form-control.success {
+            border-color: var(--success);
+        }
+        
+        /* Toggle Password Visibility */
+        .toggle-password {
+            position: absolute;
+            right: 40px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: var(--text-muted);
+        }
+        
+        /* Animation Classes */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s, transform 0.6s;
+        }
+        
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* Oriya Font */
+        .oriya {
+            font-family: 'Baloo Bhai 2', cursive;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .hero-content, .dashboard-content {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+            }
+            
+            .hero-text {
+                text-align: center;
+            }
+            
+            .cta-buttons {
+                justify-content: center;
+            }
+            
+            .stats {
+                justify-content: center;
+            }
+            
+            .steps {
+                flex-direction: column;
+                gap: 3rem;
+            }
+            
+            .steps::before {
+                display: none;
+            }
+            
+            .footer-content {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .header-content {
+                padding: 10px 0;
+            }
+            
+            nav ul {
+                display: none;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .hero {
+                padding: 140px 0 80px;
+            }
+            
+            .hero-text h1 {
+                font-size: 2.5rem;
+            }
+            
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn-primary, .btn-secondary {
+                width: 100%;
+                max-width: 300px;
+            }
+            
+            .stats {
+                flex-direction: column;
+                gap: 1.5rem;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            
+            .section-title h2 {
+                font-size: 2.2rem;
+            }
+            
+            .language-toggle {
+                top: 80px;
+                right: 10px;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .modal-content {
+                width: 95%;
+            }
+            
+            .modal-header, .modal-body, .modal-footer {
+                padding: 20px;
+            }
+            
+            .social-login {
+                flex-direction: column;
+            }
+            
+            .section {
+                padding: 60px 0;
+            }
+            
+            .section-title h2 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Language Toggle -->
+    <div class="language-toggle">
+        <button class="lang-btn active" id="englishBtn">EN</button>
+        <button class="lang-btn" id="oriyaBtn">ଓଡ଼ିଆ</button>
+    </div>
+
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="#" class="logo">
+                    <i class="fas fa-heartbeat logo-icon"></i>
+                    <span class="logo-text" data-en="HealthAssist AI" data-oriya="ସ୍ୱାସ୍ଥ୍ୟ ସହାୟକ AI">HealthAssist AI</span>
+                </a>
+                <nav>
+                    <ul>
+                        <li><a href="#" data-en="Home" data-oriya="ମୂଳପୃଷ୍ଠା">Home</a></li>
+                        <li><a href="#features" data-en="Features" data-oriya="ବିଶେଷତା">Features</a></li>
+                        <li><a href="#how-it-works" data-en="How It Works" data-oriya="ଏହା କିପରି କାମ କରେ">How It Works</a></li>
+                        <li><a href="#testimonials" data-en="Testimonials" data-oriya="ମତାମତ">Testimonials</a></li>
+                        <li><a href="#contact" data-en="Contact" data-oriya="ଯୋଗାଯୋଗ">Contact</a></li>
+                    </ul>
+                </nav>
+                <div class="auth-buttons">
+                    <button class="btn btn-login" id="loginBtn" data-en="Log In" data-oriya="ଲଗଇନ୍">Log In</button>
+                    <button class="btn btn-signup" id="signupBtn" data-en="Sign Up" data-oriya="ସାଇନ୍ ଅପ୍">Sign Up</button>
+                </div>
+                <button class="mobile-menu-btn">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="floating-elements">
+            <div class="floating-element"><i class="fas fa-stethoscope"></i></div>
+            <div class="floating-element"><i class="fas fa-heartbeat"></i></div>
+            <div class="floating-element"><i class="fas fa-pills"></i></div>
+        </div>
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-text fade-in">
+                    <h1 data-en="AI-Powered <span>Public Health Assistance</span> for Everyone" data-oriya="ସମସ୍ତଙ୍କ ପାଇଁ <span>AI-ଚାଳିତ ସାର୍ବଜନୀନ ସ୍ୱାସ୍ଥ୍ୟ ସହାୟତା</span>">AI-Powered <span>Public Health Assistance</span> for Everyone</h1>
+                    <p data-en="Access reliable healthcare information, symptom checking, and medical assistance through our AI chatbot available on WhatsApp, SMS, and web platforms." data-oriya="ଆମର AI ଚାଟବଟ୍ ମାଧ୍ୟମରେ ବିଶ୍ୱସ୍ତ ସ୍ୱାସ୍ଥ୍ୟସେବା ସୂଚନା, ଲକ୍ଷଣ ଯାଞ୍ଚ, ଏବଂ ଚିକିତ୍ସା ସହାୟତା ପ୍ରାପ୍ତ କରନ୍ତୁ, ଯାହା ୱାଟ୍ସଆପ୍, ଏସଏମଏସ, ଏବଂ ୱେବ୍ ପ୍ଲାଟଫର୍ମରେ ଉପଲବ୍ଧ।">Access reliable healthcare information, symptom checking, and medical assistance through our AI chatbot available on WhatsApp, SMS, and web platforms.</p>
+                    <div class="cta-buttons">
+                        <button class="btn btn-primary">
+                            <a href="login.html" style="text-decoration: none; color: inherit;"><i class="fas fa-robot"></i> <span data-en="Try HealthBot Now" data-oriya="ହେଲ୍ଥବଟ୍ ଚେଷ୍ଟା କରନ୍ତୁ">Try HealthBot Now</span></a>
+                        </button>
+                        <button class="btn btn-secondary">
+                            <i class="fas fa-play-circle"></i> <span data-en="Watch Demo" data-oriya="ଡେମୋ ଦେଖନ୍ତୁ">Watch Demo</span>
+                        </button>
+                    </div>
+                    <div class="stats">
+                        <div class="stat-item">
+                            <div class="stat-value">80%+</div>
+                            <div class="stat-label" data-en="Symptom Accuracy" data-oriya="ଲକ୍ଷଣ ସଠିକତା">Symptom Accuracy</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">24/7</div>
+                            <div class="stat-label" data-en="Availability" data-oriya="ଉପଲବ୍ଧତା">Availability</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">5+</div>
+                            <div class="stat-label" data-en="Languages" data-oriya="ଭାଷା">Languages</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="hero-visual fade-in">
+                    <img src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="AI Health Assistant" class="hero-image">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features section" id="features">
+        <div class="container">
+            <div class="section-title fade-in">
+                <h2 data-en="Key Features" data-oriya="ମୁଖ୍ୟ ବିଶେଷତା">Key Features</h2>
+                <p data-en="Our AI-powered health assistant provides comprehensive healthcare support through multiple channels" data-oriya="ଆମର AI-ଚାଳିତ ସ୍ୱାସ୍ଥ୍ୟ ସହାୟକ ବହୁଳ ଚ୍ୟାନେଲ୍ ମାଧ୍ୟମରେ ସମ୍ପୂର୍ଣ୍ଣ ସ୍ୱାସ୍ଥ୍ୟସେବା ସହାୟତା ପ୍ରଦାନ କରେ">Our AI-powered health assistant provides comprehensive healthcare support through multiple channels</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">
+                        <i class="fas fa-stethoscope"></i>
+                    </div>
+                    <h3 data-en="Symptom Checker" data-oriya="ଲକ୍ଷଣ ଯାଞ୍ଚକାରୀ">Symptom Checker</h3>
+                    <p data-en="AI-powered analysis of symptoms with probability-based disease predictions and risk assessment." data-oriya="ସମ୍ଭାବ୍ୟତା-ଆଧାରିତ ରୋଗ ଭବିଷ୍ୟବାଣୀ ଏବଂ ବିପଦ ମୂଲ୍ୟାଙ୍କନ ସହିତ ଲକ୍ଷଣର AI-ଚାଳିତ ବିଶ୍ଳେଷଣ।">AI-powered analysis of symptoms with probability-based disease predictions and risk assessment.</p>
+                </div>
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">
+                        <i class="fas fa-pills"></i>
+                    </div>
+                    <h3 data-en="Medicine Finder" data-oriya="ଔଷଧ ଖୋଜକ">Medicine Finder</h3>
+                    <p data-en="Find WHO-approved medicines, check availability, and compare prices at nearby pharmacies." data-oriya="WHO-ଅନୁମୋଦିତ ଔଷଧ ଖୋଜନ୍ତୁ, ଉପଲବ୍ଧତା ଯାଞ୍ଚ କରନ୍ତୁ, ଏବଂ ନିକଟବର୍ତ୍ତୀ ଫାର୍ମାସିରେ ମୂଲ୍ୟ ତୁଳନା କରନ୍ତୁ।">Find WHO-approved medicines, check availability, and compare prices at nearby pharmacies.</p>
+                </div>
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">
+                        <i class="fas fa-user-md"></i>
+                    </div>
+                    <h3 data-en="Doctor Consultation" data-oriya="ଡାକ୍ତର ପରାମର୍ଶ">Doctor Consultation</h3>
+                    <p data-en="Book appointments with verified doctors and access telemedicine services." data-oriya="ଯାଞ୍ଚିତ ଡାକ୍ତରଙ୍କ ସହିତ ନିଯୁକ୍ତି ବୁକ୍ କରନ୍ତୁ ଏବଂ ଟେଲିମେଡିସିନ୍ ସେବା ପ୍ରବେଶ କରନ୍ତୁ।">Book appointments with verified doctors and access telemedicine services.</p>
+                </div>
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">
+                        <i class="fas fa-map-marker-alt"></i>
+                    </div>
+                    <h3 data-en="Nearby Services" data-oriya="ନିକଟବର୍ତ୍ତୀ ସେବା">Nearby Services</h3>
+                    <p data-en="Locate hospitals, clinics, pharmacies, and emergency services in your area." data-oriya="ଆପଣଙ୍କ ଅଞ୍ଚଳରେ ଚିକିତ୍ସାଳୟ, କ୍ଲିନିକ୍, ଫାର୍ମାସି, ଏବଂ ଜରୁରୀ ସେବା ଖୋଜନ୍ତୁ।">Locate hospitals, clinics, pharmacies, and emergency services in your area.</p>
+                </div>
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">
+                        <i class="fas fa-first-aid"></i>
+                    </div>
+                    <h3 data-en="First Aid Resources" data-oriya="ପ୍ରଥମ ଚିକିତ୍ସା ସମ୍ବଳ">First Aid Resources</h3>
+                    <p data-en="Step-by-step guides and video tutorials for handling common emergencies." data-oriya="ସାଧାରଣ ଜରୁରୀ ପରିସ୍ଥିତି ସମ୍ଭାଳିବା ପାଇଁ ପଦକ୍ରମ ଗାଇଡ୍ ଏବଂ ଭିଡିଓ ଟ୍ୟୁଟୋରିଆଲ୍।">Step-by-step guides and video tutorials for handling common emergencies.</p>
+                </div>
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">
+                        <i class="fas fa-bell"></i>
+                    </div>
+                    <h3 data-en="Health Alerts" data-oriya="ସ୍ୱାସ୍ଥ୍ୟ ସତର୍କତା">Health Alerts</h3>
+                    <p data-en="Real-time outbreak alerts, vaccination reminders, and public health advisories." data-oriya="ରିଆଲ୍-ଟାଇମ୍ ରୋଗ ପ୍ରସାର ସତର୍କତା, ଟିକାକରଣ ରିମାଇଣ୍ଡର୍, ଏବଂ ସାର୍ବଜନୀନ ସ୍ୱାସ୍ଥ୍ୟ ପରାମର୍ଶ।">Real-time outbreak alerts, vaccination reminders, and public health advisories.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="how-it-works section" id="how-it-works">
+        <div class="container">
+            <div class="section-title fade-in">
+                <h2 data-en="How It Works" data-oriya="ଏହା କିପରି କାମ କରେ">How It Works</h2>
+                <p data-en="Simple steps to access healthcare assistance through our AI chatbot" data-oriya="ଆମର AI ଚାଟବଟ୍ ମାଧ୍ୟମରେ ସ୍ୱାସ୍ଥ୍ୟସେବା ସହାୟତା ପ୍ରାପ୍ତ କରିବାର ସରଳ ପଦକ୍ଷେପ">Simple steps to access healthcare assistance through our AI chatbot</p>
+            </div>
+            <div class="steps">
+                <div class="step fade-in">
+                    <div class="step-number">1</div>
+                    <h3 data-en="Choose Your Platform" data-oriya="ଆପଣଙ୍କର ପ୍ଲାଟଫର୍ମ ବାଛନ୍ତୁ">Choose Your Platform</h3>
+                    <p data-en="Access our health assistant via WhatsApp, SMS, or web platform based on your preference." data-oriya="ଆପଣଙ୍କର ପସନ୍ଦ ଅନୁଯାୟୀ ୱାଟ୍ସଆପ୍, ଏସଏମଏସ, କିମ୍ବା ୱେବ୍ ପ୍ଲାଟଫର୍ମ ମାଧ୍ୟମରେ ଆମର ସ୍ୱାସ୍ଥ୍ୟ ସହାୟକକୁ ପ୍ରବେଶ କରନ୍ତୁ।">Access our health assistant via WhatsApp, SMS, or web platform based on your preference.</p>
+                </div>
+                <div class="step fade-in">
+                    <div class="step-number">2</div>
+                    <h3 data-en="Describe Your Symptoms" data-oriya="ଆପଣଙ୍କର ଲକ୍ଷଣ ବର୍ଣ୍ଣନା କରନ୍ତୁ">Describe Your Symptoms</h3>
+                    <p data-en="Chat with our AI assistant to describe your health concerns or ask medical questions." data-oriya="ଆପଣଙ୍କର ସ୍ୱାସ୍ଥ୍ୟ ଚିନ୍ତା ବର୍ଣ୍ଣନା କରିବା କିମ୍ବା ଚିକିତ୍ସା ସମ୍ବନ୍ଧୀୟ ପ୍ରଶ୍ନ ପଚାରିବା ପାଇଁ ଆମର AI ସହାୟକ ସହିତ ଚାଟ୍ କରନ୍ତୁ।">Chat with our AI assistant to describe your health concerns or ask medical questions.</p>
+                </div>
+                <div class="step fade-in">
+                    <div class="step-number">3</div>
+                    <h3 data-en="Receive AI Analysis" data-oriya="AI ବିଶ୍ଳେଷଣ ପ୍ରାପ୍ତ କରନ୍ତୁ">Receive AI Analysis</h3>
+                    <p data-en="Get instant assessment, possible conditions, and recommended actions." data-oriya="ତତକ୍ଷଣାତ୍ ମୂଲ୍ୟାଙ୍କନ, ସମ୍ଭାବ୍ୟ ଅବସ୍ଥା, ଏବଂ ପରାମର୍ଶିତ କାର୍ଯ୍ୟ ପ୍ରାପ୍ତ କରନ୍ତୁ।">Get instant assessment, possible conditions, and recommended actions.</p>
+                </div>
+                <div class="step fade-in">
+                    <div class="step-number">4</div>
+                    <h3 data-en="Access Services" data-oriya="ସେବା ପ୍ରବେଶ କରନ୍ତୁ">Access Services</h3>
+                    <p data-en="Connect to doctors, find medicines, or locate nearby healthcare facilities as needed." data-oriya="ଆବଶ୍ୟକତା ଅନୁଯାୟୀ ଡାକ୍ତରଙ୍କ ସହିତ ସଂଯୋଗ କରନ୍ତୁ, ଔଷଧ ଖୋଜନ୍ତୁ, କିମ୍ବା ନିକଟବର୍ତ୍ତୀ ସ୍ୱାସ୍ଥ୍ୟସେବା ସୁବିଧା ଖୋଜନ୍ତୁ।">Connect to doctors, find medicines, or locate nearby healthcare facilities as needed.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Dashboard Preview -->
+    <section class="dashboard-preview section">
+        <div class="container">
+            <div class="dashboard-content">
+                <div class="dashboard-text fade-in">
+                    <h2 data-en="Comprehensive Health Dashboard" data-oriya="ସମ୍ପୂର୍ଣ୍ଣ ସ୍ୱାସ୍ଥ୍ୟ ଡ୍ୟାସବୋର୍ଡ">Comprehensive Health Dashboard</h2>
+                    <p data-en="Monitor your health status, track medications, view appointment history, and access personalized health recommendations through our intuitive dashboard." data-oriya="ଆମର ଅନ୍ତର୍ଦୃଷ୍ଟିପୂର୍ଣ୍ଣ ଡ୍ୟାସବୋର୍ଡ୍ ମାଧ୍ୟମରେ ଆପଣଙ୍କର ସ୍ୱାସ୍ଥ୍ୟ ସ୍ଥିତି ନିରୀକ୍ଷଣ କରନ୍ତୁ, ଔଷଧ ଟ୍ରାକ୍ କରନ୍ତୁ, ନିଯୁକ୍ତି ଇତିହାସ ଦେଖନ୍ତୁ, ଏବଂ ବ୍ୟକ୍ତିଗତ ସ୍ୱାସ୍ଥ୍ୟ ସୁପାରିଶ ପ୍ରବେଶ କରନ୍ତୁ।">Monitor your health status, track medications, view appointment history, and access personalized health recommendations through our intuitive dashboard.</p>
+                    <button class="btn btn-primary">
+                        <i class="fas fa-desktop"></i> <span data-en="Explore Dashboard" data-oriya="ଡ୍ୟାସବୋର୍ଡ୍ ଅନୁସନ୍ଧାନ କରନ୍ତୁ">Explore Dashboard</span>
+                    </button>
+                </div>
+                <div class="dashboard-visual fade-in">
+                    <img src="https://images.unsplash.com/photo-1579684385127-1ef15d508118?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Health Dashboard" class="dashboard-image">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="testimonials section" id="testimonials">
+        <div class="container">
+            <div class="section-title fade-in">
+                <h2 data-en="What Users Say" data-oriya="ବ୍ୟବହାରକାରୀମାନେ କ'ଣ କହନ୍ତି">What Users Say</h2>
+                <p data-en="Hear from people who have benefited from HealthAssist AI" data-oriya="ସେହି ଲୋକଙ୍କଠାରୁ ଶୁଣନ୍ତୁ ଯେଉଁମାନେ HealthAssist AI ରୁ ଉପକୃତ ହୋଇଛନ୍ତି">Hear from people who have benefited from HealthAssist AI</p>
+            </div>
+            <div class="testimonials-grid">
+                <div class="testimonial-card fade-in">
+                    <div class="testimonial-text" data-en="HealthAssist AI helped me identify early symptoms of diabetes that I had been ignoring. The chatbot guided me to consult a doctor, and early detection made treatment much easier." data-oriya="HealthAssist AI ମତେ ମଧୁମେହର ପ୍ରାରମ୍ଭିକ ଲକ୍ଷଣ ଚିହ୍ନଟ କରିବାରେ ସାହାଯ୍ୟ କରିଛି ଯାହାକୁ ମୁଁ ଅବହେଳା କରୁଥିଲି। ଚାଟବଟ୍ ମତେ ଜଣେ ଡାକ୍ତରଙ୍କ ସହିତ ପରାମର୍ଶ କରିବାକୁ ମାର୍ଗଦର୍ଶନ କରିଥିଲା, ଏବଂ ପ୍ରାରମ୍ଭିକ ଚିହ୍ନଟ ଚିକିତ୍ସାକୁ ବହୁତ ସହଜ କରିଦେଇଛି।">HealthAssist AI helped me identify early symptoms of diabetes that I had been ignoring. The chatbot guided me to consult a doctor, and early detection made treatment much easier.</div>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">PS</div>
+                        <div class="author-info">
+                            <h4 data-en="Priya Sharma" data-oriya="ପ୍ରିୟା ଶର୍ମା">Priya Sharma</h4>
+                            <p data-en="Teacher, Uttar Pradesh" data-oriya="ଶିକ୍ଷକ, ଉତ୍ତରପ୍ରଦେଶ">Teacher, Uttar Pradesh</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card fade-in">
+                    <div class="testimonial-text" data-en="As someone living in a rural area with limited access to healthcare, this service has been a lifesaver. I can check symptoms and get medicine information without traveling for hours." data-oriya="ସୀମିତ ସ୍ୱାସ୍ଥ୍ୟସେବା ପ୍ରବେଶ ସହିତ ଗ୍ରାମାଞ୍ଚଳରେ ବାସ କରୁଥିବା ଜଣେ ବ୍ୟକ୍ତି ଭାବରେ, ଏହି ସେବା ଜୀବନରକ୍ଷକ ହୋଇଛି। ମୁଁ ଘଣ୍ଟା ଘଣ୍ଟା ଯାତ୍ରା କରିବା ବିନା ଲକ୍ଷଣ ଯାଞ୍ଚ କରିପାରେ ଏବଂ ଔଷଧ ସୂଚନା ପାଇପାରେ।">As someone living in a rural area with limited access to healthcare, this service has been a lifesaver. I can check symptoms and get medicine information without traveling for hours.</div>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">RS</div>
+                        <div class="author-info">
+                            <h4 data-en="Ramesh Singh" data-oriya="ରମେଶ ସିଂହ">Ramesh Singh</h4>
+                            <p data-en="Farmer, Bihar" data-oriya="କୃଷକ, ବିହାର">Farmer, Bihar</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card fade-in">
+                    <div class="testimonial-text" data-en="The multilingual support is fantastic. My elderly parents who only speak our regional language can now access reliable health information through the WhatsApp chatbot." data-oriya="ବହୁଭାଷୀ ସମର୍ଥନ ଚମତ୍କାର। ମୋର ବୃଦ୍ଧ ପିତାମାତା ଯେଉଁମାନେ କେବଳ ଆମର ଅଞ୍ଚଳିକ ଭାଷା କହିପାରନ୍ତି, ସେମାନେ ବର୍ତ୍ତମାନ ୱାଟ୍ସଆପ୍ ଚାଟବଟ୍ ମାଧ୍ୟମରେ ବିଶ୍ୱସ୍ତ ସ୍ୱାସ୍ଥ୍ୟ ସୂଚନା ପ୍ରବେଶ କରିପାରୁଛନ୍ତି।">The multilingual support is fantastic. My elderly parents who only speak our regional language can now access reliable health information through the WhatsApp chatbot.</div>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">AK</div>
+                        <div class="author-info">
+                            <h4 data-en="Anita Kumar" data-oriya="ଅନିତା କୁମାର">Anita Kumar</h4>
+                            <p data-en="Software Engineer, Karnataka" data-oriya="ସଫ୍ଟୱେୟାର ଇଞ୍ଜିନିୟର, କର୍ଣ୍ଣାଟକ">Software Engineer, Karnataka</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section section" id="contact">
+        <div class="container">
+            <div class="cta-content fade-in">
+                <h2 data-en="Ready to Take Control of Your Health?" data-oriya="ଆପଣଙ୍କର ସ୍ୱାସ୍ଥ୍ୟ ନିୟନ୍ତ୍ରଣ କରିବାକୁ ପ୍ରସ୍ତୁତ?">Ready to Take Control of Your Health?</h2>
+                <p data-en="Join thousands of users who are using HealthAssist AI to make informed health decisions, access medical information, and connect with healthcare services." data-oriya="ହଜାର ହଜାର ବ୍ୟବହାରକାରୀଙ୍କ ସହିତ ଯୋଗ ଦିଅନ୍ତୁ ଯେଉଁମାନେ ସୂଚିତ ସ୍ୱାସ୍ଥ୍ୟ ନିଷ୍ପତ୍ତି ନେବା, ଚିକିତ୍ସା ସୂଚନା ପ୍ରବେଶ କରିବା, ଏବଂ ସ୍ୱାସ୍ଥ୍ୟସେବା ସେବା ସହିତ ସଂଯୋଗ କରିବା ପାଇଁ HealthAssist AI ବ୍ୟବହାର କରୁଛନ୍ତି।">Join thousands of users who are using HealthAssist AI to make informed health decisions, access medical information, and connect with healthcare services.</p>
+                <button class="btn btn-light">
+                    <i class="fas fa-comment-medical"></i> <span data-en="Start Chatting Now" data-oriya="ବର୍ତ୍ତମାନ ଚାଟିଂ ଆରମ୍ଭ କରନ୍ତୁ">Start Chatting Now</span>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-about">
+                    <div class="logo">
+                        <i class="fas fa-heartbeat logo-icon"></i> <span class="logo-text" data-en="HealthAssist AI" data-oriya="ସ୍ୱାସ୍ଥ୍ୟ ସହାୟକ AI">HealthAssist AI</span>
+                    </div>
+                    <p data-en="AI-powered healthcare assistance for disease awareness, symptom checking, and connecting you to medical services." data-oriya="ରୋଗ ସଚେତନତା, ଲକ୍ଷଣ ଯାଞ୍ଚ, ଏବଂ ଆପଣଙ୍କୁ ଚିକିତ୍ସା ସେବା ସହିତ ସଂଯୋଗ କରିବା ପାଇଁ AI-ଚାଳିତ ସ୍ୱାସ୍ଥ୍ୟସେବା ସହାୟତା।">AI-powered healthcare assistance for disease awareness, symptom checking, and connecting you to medical services.</p>
+                    <div class="social-links">
+                        <a href="#" class="social-link">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="social-link">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="social-link">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                        <a href="#" class="social-link">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="footer-column">
+                    <h4 data-en="Services" data-oriya="ସେବା">Services</h4>
+                    <ul>
+                        <li><a href="#" data-en="Symptom Checker" data-oriya="ଲକ୍ଷଣ ଯାଞ୍ଚକାରୀ">Symptom Checker</a></li>
+                        <li><a href="#" data-en="Medicine Finder" data-oriya="ଔଷଧ ଖୋଜକ">Medicine Finder</a></li>
+                        <li><a href="#" data-en="Doctor Consultation" data-oriya="ଡାକ୍ତର ପରାମର୍ଶ">Doctor Consultation</a></li>
+                        <li><a href="#" data-en="Emergency Services" data-oriya="ଜରୁରୀ ସେବା">Emergency Services</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h4 data-en="Resources" data-oriya="ସମ୍ବଳ">Resources</h4>
+                    <ul>
+                        <li><a href="#" data-en="Health Articles" data-oriya="ସ୍ୱାସ୍ଥ୍ୟ ପ୍ରବନ୍ଧ">Health Articles</a></li>
+                        <li><a href="#" data-en="First Aid Guides" data-oriya="ପ୍ରଥମ ଚିକିତ୍ସା ଗାଇଡ୍">First Aid Guides</a></li>
+                        <li><a href="#" data-en="Vaccination Info" data-oriya="ଟିକାକରଣ ସୂଚନା">Vaccination Info</a></li>
+                        <li><a href="#" data-en="Disease Prevention" data-oriya="ରୋଗ ପ୍ରତିଷେଧ">Disease Prevention</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h4 data-en="Company" data-oriya="କମ୍ପାନୀ">Company</h4>
+                    <ul>
+                        <li><a href="#" data-en="About Us" data-oriya="ଆମ ବିଷୟରେ">About Us</a></li>
+                        <li><a href="#" data-en="Careers" data-oriya="କ୍ୟାରିଅର୍">Careers</a></li>
+                        <li><a href="#" data-en="Contact" data-oriya="ଯୋଗାଯୋଗ">Contact</a></li>
+                        <li><a href="#" data-en="Partners" data-oriya="ସାଥୀ">Partners</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2025 HealthAssist AI. <span data-en="All rights reserved." data-oriya="ସମସ୍ତ ଅଧିକାର ସଂରକ୍ଷିତ।">All rights reserved.</span> | <a href="#" data-en="Privacy Policy" data-oriya="ଗୋପନୀୟତା ନୀତି">Privacy Policy</a> | <a href="#" data-en="Terms of Service" data-oriya="ସେବା ଶର୍ତ୍ତ">Terms of Service</a></p>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- Login Modal -->
+    <div class="modal" id="loginModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="close-btn" id="closeLogin">
+                    <i class="fas fa-times"></i>
+                </div>
+                <h2 data-en="Welcome Back" data-oriya="ପୁନର୍ବାର ସ୍ୱାଗତ">Welcome Back</h2>
+                <p data-en="Sign in to your HealthAssist AI account" data-oriya="ଆପଣଙ୍କର HealthAssist AI ଆକାଉଣ୍ଟରେ ସାଇନ୍ ଇନ୍ କରନ୍ତୁ">Sign in to your HealthAssist AI account</p>
+            </div>
+            <div class="modal-body">
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="loginEmail" data-en="Email Address" data-oriya="ଇମେଲ୍ ଠିକଣା">Email Address</label>
+                        <div class="input-with-icon">
+                            <input type="email" class="form-control" id="loginEmail" data-en-placeholder="Enter your email" data-oriya-placeholder="ଆପଣଙ୍କର ଇମେଲ୍ ପ୍ରବେଶ କରନ୍ତୁ" placeholder="Enter your email">
+                            <div class="input-icon">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                        </div>
+                        <div class="error-message" id="loginEmailError" data-en="Please enter a valid email address" data-oriya="ଦୟାକରି ଏକ ବୈଧ ଇମେଲ୍ ଠିକଣା ପ୍ରବେଶ କରନ୍ତୁ">Please enter a valid email address</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="loginPassword" data-en="Password" data-oriya="ପାସୱାର୍ଡ">Password</label>
+                        <div class="input-with-icon">
+                            <input type="password" class="form-control" id="loginPassword" data-en-placeholder="Enter your password" data-oriya-placeholder="ଆପଣଙ୍କର ପାସୱାର୍ଡ୍ ପ୍ରବେଶ କରନ୍ତୁ" placeholder="Enter your password">
+                            <span class="toggle-password" id="toggleLoginPassword">
+                                <i class="fas fa-eye"></i>
+                            </span>
+                            <div class="input-icon">
+                                <i class="fas fa-lock"></i>
+                            </div>
+                        </div>
+                        <div class="error-message" id="loginPasswordError" data-en="Password must be at least 6 characters" data-oriya="ପାସୱାର୍ଡ୍ ଅତିକମରେ 6 ଅକ୍ଷରର ହୋଇଥିବା ଉଚିତ">Password must be at least 6 characters</div>
+                    </div>
+                    
+                    <div class="forgot-password">
+                        <a href="#" data-en="Forgot your password?" data-oriya="ଆପଣଙ୍କର ପାସୱାର୍ଡ୍ ଭୁଲି ଗଲେ?">Forgot your password?</a>
+                    </div>
+                    
+                    <a href="home_for_old.html" class="btn btn-primary" style="width: 100%; padding: 18px; display: inline-block; text-align: center; text-decoration: none;">
+                        <i class="fas fa-user-plus"></i> <span data-en="Sign-in" data-oriya="ସାଇନ୍-ଇନ୍">Sign In</span>
+                    </a>
+                </form>
+                
+                <div class="divider" data-en="or continue with" data-oriya="କିମ୍ବା ଜାରି ରଖନ୍ତୁ">or continue with</div>
+                
+                <div class="social-login">
+                    <button class="social-btn google-btn">
+                        <i class="fab fa-google"></i> Google
+                    </button>
+                    <button class="social-btn facebook-btn">
+                        <i class="fab fa-facebook-f"></i> Facebook
+                    </button>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <p data-en="Don't have an account?" data-oriya="ଆକାଉଣ୍ଟ୍ ନାହିଁ?">Don't have an account? <a href="#" id="switchToSignup" data-en="Sign up" data-oriya="ସାଇନ୍ ଅପ୍">Sign up</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Signup Modal -->
+    <div class="modal" id="signupModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="close-btn" id="closeSignup">
+                    <i class="fas fa-times"></i>
+                </div>
+                <h2 data-en="Create Account" data-oriya="ଆକାଉଣ୍ଟ୍ ସୃଷ୍ଟି କରନ୍ତୁ">Create Account</h2>
+                <p data-en="Join HealthAssist AI for personalized health assistance" data-oriya="ବ୍ୟକ୍ତିଗତ ସ୍ୱାସ୍ଥ୍ୟ ସହାୟତା ପାଇଁ HealthAssist AI ରେ ଯୋଗ ଦିଅନ୍ତୁ">Join HealthAssist AI for personalized health assistance</p>
+            </div>
+            <div class="modal-body">
+                <form id="signupForm">
+                    <div class="form-group">
+                        <label for="signupName" data-en="Full Name" data-oriya="ପୂରା ନାମ">Full Name</label>
+                        <div class="input-with-icon">
+                            <input type="text" class="form-control" id="signupName" data-en-placeholder="Enter your full name" data-oriya-placeholder="ଆପଣଙ୍କର ପୂରା ନାମ ପ୍ରବେଶ କରନ୍ତୁ" placeholder="Enter your full name">
+                            <div class="input-icon">
+                                <i class="fas fa-user"></i>
+                            </div>
+                        </div>
+                        <div class="error-message" id="signupNameError" data-en="Please enter your full name" data-oriya="ଦୟାକରି ଆପଣଙ୍କର ପୂରା ନାମ ପ୍ରବେଶ କରନ୍ତୁ">Please enter your full name</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="signupEmail" data-en="Email Address" data-oriya="ଇମେଲ୍ ଠିକଣା">Email Address</label>
+                        <div class="input-with-icon">
+                            <input type="email" class="form-control" id="signupEmail" data-en-placeholder="Enter your email" data-oriya-placeholder="ଆପଣଙ୍କର ଇମେଲ୍ ପ୍ରବେଶ କରନ୍ତୁ" placeholder="Enter your email">
+                            <div class="input-icon">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                        </div>
+                        <div class="error-message" id="signupEmailError" data-en="Please enter a valid email address" data-oriya="ଦୟାକରି ଏକ ବୈଧ ଇମେଲ୍ ଠିକଣା ପ୍ରବେଶ କରନ୍ତୁ">Please enter a valid email address</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="signupPassword" data-en="Password" data-oriya="ପାସୱାର୍ଡ">Password</label>
+                        <div class="input-with-icon">
+                            <input type="password" class="form-control" id="signupPassword" data-en-placeholder="Create a password" data-oriya-placeholder="ଏକ ପାସୱାର୍ଡ୍ ସୃଷ୍ଟି କରନ୍ତୁ" placeholder="Create a password">
+                            <span class="toggle-password" id="toggleSignupPassword">
+                                <i class="fas fa-eye"></i>
+                            </span>
+                            <div class="input-icon">
+                                <i class="fas fa-lock"></i>
+                            </div>
+                        </div>
+                        <div class="error-message" id="signupPasswordError" data-en="Password must be at least 8 characters" data-oriya="ପାସୱାର୍ଡ୍ ଅତିକମରେ 8 ଅକ୍ଷରର ହୋଇଥିବା ଉଚିତ">Password must be at least 8 characters</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="signupConfirmPassword" data-en="Confirm Password" data-oriya="ପାସୱାର୍ଡ୍ ନିଶ୍ଚିତ କରନ୍ତୁ">Confirm Password</label>
+                        <div class="input-with-icon">
+                            <input type="password" class="form-control" id="signupConfirmPassword" data-en-placeholder="Confirm your password" data-oriya-placeholder="ଆପଣଙ୍କର ପାସୱାର୍ଡ୍ ନିଶ୍ଚିତ କରନ୍ତୁ" placeholder="Confirm your password">
+                            <span class="toggle-password" id="toggleSignupConfirmPassword">
+                                <i class="fas fa-eye"></i>
+                            </span>
+                            <div class="input-icon">
+                                <i class="fas fa-lock"></i>
+                            </div>
+                        </div>
+                        <div class="error-message" id="signupConfirmPasswordError" data-en="Passwords do not match" data-oriya="ପାସୱାର୍ଡ୍ ମେଳ ଖାଉନାହିଁ">Passwords do not match</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="userType" data-en="I am a:" data-oriya="ମୁଁ ଜଣେ:">I am a:</label>
+                        <select class="form-control" id="userType">
+                            <option value="" data-en="Select your role" data-oriya="ଆପଣଙ୍କର ଭୂମିକା ଚୟନ କରନ୍ତୁ">Select your role</option>
+                            <option value="patient" data-en="Patient" data-oriya="ରୋଗୀ">Patient</option>
+                            <option value="caregiver" data-en="Caregiver" data-oriya="ଯତ୍ନନେତା">Caregiver</option>
+                            <option value="healthcare" data-en="Healthcare Professional" data-oriya="ସ୍ୱାସ୍ଥ୍ୟସେବା ବୃତ୍ତିଗତ">Healthcare Professional</option>
+                            <option value="researcher" data-en="Researcher" data-oriya="ଗବେଷକ">Researcher</option>
+                            <option value="other" data-en="Other" data-oriya="ଅନ୍ୟାନ୍ୟ">Other</option>
+                        </select>
+                        <div class="error-message" id="userTypeError" data-en="Please select your role" data-oriya="ଦୟାକରି ଆପଣଙ୍କର ଭୂମିକା ଚୟନ କରନ୍ତୁ">Please select your role</div>
+                    </div>
+                    
+                    <a href="home_for_new.html" class="btn btn-primary" style="width: 100%; padding: 18px; display: inline-block; text-align: center; text-decoration: none;">
+                        <i class="fas fa-user-plus"></i> <span data-en="Create Health Account" data-oriya="ସ୍ୱାସ୍ଥ୍ୟ ଆକାଉଣ୍ଟ୍ ସୃଷ୍ଟି କରନ୍ତୁ">Create Health Account</span>
+                    </a>
+                </form>
+                
+                <div class="divider" data-en="or sign up with" data-oriya="କିମ୍ବା ସହିତ ସାଇନ୍ ଅପ୍ କରନ୍ତୁ">or sign up with</div>
+                
+                <div class="social-login">
+                    <button class="social-btn google-btn">
+                        <i class="fab fa-google"></i> Google
+                    </button>
+                    <button class="social-btn facebook-btn">
+                        <i class="fab fa-facebook-f"></i> Facebook
+                    </button>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <p data-en="Already have an account?" data-oriya="ପୂର୍ବରୁ ଆକାଉଣ୍ଟ୍ ଅଛି?">Already have an account? <a href="#" id="switchToLogin" data-en="Sign in" data-oriya="ସାଇନ୍ ଇନ୍">Sign in</a></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Language Toggle
+        const englishBtn = document.getElementById('englishBtn');
+        const oriyaBtn = document.getElementById('oriyaBtn');
+        let currentLanguage = 'en';
+        
+        englishBtn.addEventListener('click', () => {
+            setLanguage('en');
+        });
+        
+        oriyaBtn.addEventListener('click', () => {
+            setLanguage('oriya');
+        });
+        
+        function setLanguage(lang) {
+            currentLanguage = lang;
+            
+            // Update active button
+            englishBtn.classList.toggle('active', lang === 'en');
+            oriyaBtn.classList.toggle('active', lang === 'oriya');
+            
+            // Update all elements with data attributes
+            document.querySelectorAll('[data-en]').forEach(element => {
+                if (lang === 'en') {
+                    if (element.hasAttribute('data-en-placeholder')) {
+                        element.placeholder = element.getAttribute('data-en-placeholder');
+                    } else {
+                        element.textContent = element.getAttribute('data-en');
+                    }
+                } else {
+                    if (element.hasAttribute('data-oriya-placeholder')) {
+                        element.placeholder = element.getAttribute('data-oriya-placeholder');
+                    } else {
+                        element.textContent = element.getAttribute('data-oriya');
+                    }
+                }
+            });
+            
+            // Update body class for font changes
+            if (lang === 'oriya') {
+                document.body.classList.add('oriya');
+            } else {
+                document.body.classList.remove('oriya');
+            }
+        }
+        
+        // Scroll animations
+        document.addEventListener('DOMContentLoaded', function() {
+            const fadeElements = document.querySelectorAll('.fade-in');
+            
+            const fadeInObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, { threshold: 0.1 });
+            
+            fadeElements.forEach(element => {
+                fadeInObserver.observe(element);
+            });
+            
+            // Header scroll effect
+            window.addEventListener('scroll', function() {
+                const header = document.querySelector('header');
+                if (window.scrollY > 50) {
+                    header.classList.add('scrolled');
+                } else {
+                    header.classList.remove('scrolled');
+                }
+            });
+            
+            // Mobile menu toggle
+            const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+            const nav = document.querySelector('nav ul');
+            
+            mobileMenuBtn.addEventListener('click', function() {
+                if (nav.style.display === 'flex') {
+                    nav.style.display = 'none';
+                } else {
+                    nav.style.display = 'flex';
+                    nav.style.flexDirection = 'column';
+                    nav.style.position = 'absolute';
+                    nav.style.top = '70px';
+                    nav.style.left = '0';
+                    nav.style.width = '100%';
+                    nav.style.background = 'var(--white)';
+                    nav.style.padding = '20px';
+                    nav.style.boxShadow = '0 5px 10px var(--shadow)';
+                }
+            });
+            
+            // Smooth scrolling for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    
+                    const targetId = this.getAttribute('href');
+                    if (targetId === '#') return;
+                    
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 80,
+                            behavior: 'smooth'
+                        });
+                        
+                        // Close mobile menu if open
+                        if (window.innerWidth <= 768) {
+                            nav.style.display = 'none';
+                        }
+                    }
+                });
+            });
+            
+            // Button hover effects
+            const buttons = document.querySelectorAll('.btn');
+            
+            buttons.forEach(button => {
+                button.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-3px)';
+                });
+                
+                button.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                });
+            });
+        });
+
+        // DOM Elements
+        const loginBtn = document.getElementById('loginBtn');
+        const signupBtn = document.getElementById('signupBtn');
+        const loginModal = document.getElementById('loginModal');
+        const signupModal = document.getElementById('signupModal');
+        const closeLogin = document.getElementById('closeLogin');
+        const closeSignup = document.getElementById('closeSignup');
+        const switchToSignup = document.getElementById('switchToSignup');
+        const switchToLogin = document.getElementById('switchToLogin');
+        
+        // Toggle password visibility
+        const toggleLoginPassword = document.getElementById('toggleLoginPassword');
+        const toggleSignupPassword = document.getElementById('toggleSignupPassword');
+        const toggleSignupConfirmPassword = document.getElementById('toggleSignupConfirmPassword');
+        
+        // Form elements
+        const loginForm = document.getElementById('loginForm');
+        const signupForm = document.getElementById('signupForm');
+        
+        // Show Login Modal
+        loginBtn.addEventListener('click', () => {
+            loginModal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        });
+        
+        // Show Signup Modal
+        signupBtn.addEventListener('click', () => {
+            signupModal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        });
+        
+        // Close Modals
+        closeLogin.addEventListener('click', () => {
+            loginModal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+            resetForm(loginForm);
+        });
+        
+        closeSignup.addEventListener('click', () => {
+            signupModal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+            resetForm(signupForm);
+        });
+        
+        // Switch between Login and Signup
+        switchToSignup.addEventListener('click', (e) => {
+            e.preventDefault();
+            loginModal.style.display = 'none';
+            signupModal.style.display = 'flex';
+            resetForm(loginForm);
+        });
+        
+        switchToLogin.addEventListener('click', (e) => {
+            e.preventDefault();
+            signupModal.style.display = 'none';
+            loginModal.style.display = 'flex';
+            resetForm(signupForm);
+        });
+        
+        // Close modal when clicking outside
+        window.addEventListener('click', (e) => {
+            if (e.target === loginModal) {
+                loginModal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+                resetForm(loginForm);
+            }
+            if (e.target === signupModal) {
+                signupModal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+                resetForm(signupForm);
+            }
+        });
+        
+        // Toggle Password Visibility
+        toggleLoginPassword.addEventListener('click', () => {
+            const passwordInput = document.getElementById('loginPassword');
+            const icon = toggleLoginPassword.querySelector('i');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        });
+        
+        toggleSignupPassword.addEventListener('click', () => {
+            const passwordInput = document.getElementById('signupPassword');
+            const icon = toggleSignupPassword.querySelector('i');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        });
+        
+        toggleSignupConfirmPassword.addEventListener('click', () => {
+            const passwordInput = document.getElementById('signupConfirmPassword');
+            const icon = toggleSignupConfirmPassword.querySelector('i');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        });
+        
+        // Form Validation and Submission
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            if (validateLoginForm()) {
+                // Simulate login process
+                const submitBtn = loginForm.querySelector('button[type="submit"]');
+                const originalText = submitBtn.innerHTML;
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> ' + (currentLanguage === 'en' ? 'Signing In...' : 'ସାଇନ୍ ଇନ୍ ହେଉଛି...');
+                submitBtn.disabled = true;
+                
+                setTimeout(() => {
+                    alert(currentLanguage === 'en' ? 'Login successful! Redirecting to dashboard...' : 'ଲଗଇନ୍ ସଫଳ! ଡ୍ୟାସବୋର୍ଡ୍ କୁ ପୁନଃନିର୍ଦ୍ଦେଶିତ କରାଯାଉଛି...');
+                    loginModal.style.display = 'none';
+                    document.body.style.overflow = 'auto';
+                    resetForm(loginForm);
+                    submitBtn.innerHTML = originalText;
+                    submitBtn.disabled = false;
+                }, 1500);
+            }
+        });
+        
+        signupForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            if (validateSignupForm()) {
+                // Simulate signup process
+                const submitBtn = signupForm.querySelector('button[type="submit"]');
+                const originalText = submitBtn.innerHTML;
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> ' + (currentLanguage === 'en' ? 'Creating Account...' : 'ଆକାଉଣ୍ଟ୍ ସୃଷ୍ଟି ହେଉଛି...');
+                submitBtn.disabled = true;
+                
+                setTimeout(() => {
+                    alert(currentLanguage === 'en' ? 'Account created successfully! Please check your email for verification.' : 'ଆକାଉଣ୍ଟ୍ ସଫଳତାର ସହିତ ସୃଷ୍ଟି ହୋଇଛି! ଦୟାକରି ଯାଞ୍ଚ ପାଇଁ ଆପଣଙ୍କର ଇମେଲ୍ ଯାଞ୍ଚ କରନ୍ତୁ।');
+                    signupModal.style.display = 'none';
+                    document.body.style.overflow = 'auto';
+                    resetForm(signupForm);
+                    submitBtn.innerHTML = originalText;
+                    submitBtn.disabled = false;
+                }, 1500);
+            }
+        });
+        
+        // Validation Functions
+        function validateLoginForm() {
+            let isValid = true;
+            const email = document.getElementById('loginEmail');
+            const password = document.getElementById('loginPassword');
+            const emailError = document.getElementById('loginEmailError');
+            const passwordError = document.getElementById('loginPasswordError');
+            
+            // Reset errors
+            resetErrors([email, password], [emailError, passwordError]);
+            
+            // Email validation
+            if (!email.value) {
+                showError(email, emailError, currentLanguage === 'en' ? 'Email is required' : 'ଇମେଲ୍ ଆବଶ୍ୟକ');
+                isValid = false;
+            } else if (!isValidEmail(email.value)) {
+                showError(email, emailError, currentLanguage === 'en' ? 'Please enter a valid email address' : 'ଦୟାକରି ଏକ ବୈଧ ଇମେଲ୍ ଠିକଣା ପ୍ରବେଶ କରନ୍ତୁ');
+                isValid = false;
+            }
+            
+            // Password validation
+            if (!password.value) {
+                showError(password, passwordError, currentLanguage === 'en' ? 'Password is required' : 'ପାସୱାର୍ଡ୍ ଆବଶ୍ୟକ');
+                isValid = false;
+            } else if (password.value.length < 6) {
+                showError(password, passwordError, currentLanguage === 'en' ? 'Password must be at least 6 characters' : 'ପାସୱାର୍ଡ୍ ଅତିକମରେ 6 ଅକ୍ଷରର ହୋଇଥିବା ଉଚିତ');
+                isValid = false;
+            }
+            
+            return isValid;
+        }
+        
+        function validateSignupForm() {
+            let isValid = true;
+            const name = document.getElementById('signupName');
+            const email = document.getElementById('signupEmail');
+            const password = document.getElementById('signupPassword');
+            const confirmPassword = document.getElementById('signupConfirmPassword');
+            const userType = document.getElementById('userType');
+            
+            const nameError = document.getElementById('signupNameError');
+            const emailError = document.getElementById('signupEmailError');
+            const passwordError = document.getElementById('signupPasswordError');
+            const confirmPasswordError = document.getElementById('signupConfirmPasswordError');
+            const userTypeError = document.getElementById('userTypeError');
+            
+            // Reset errors
+            resetErrors([name, email, password, confirmPassword, userType], 
+                       [nameError, emailError, passwordError, confirmPasswordError, userTypeError]);
+            
+            // Name validation
+            if (!name.value.trim()) {
+                showError(name, nameError, currentLanguage === 'en' ? 'Full name is required' : 'ପୂରା ନାମ ଆବଶ୍ୟକ');
+                isValid = false;
+            }
+            
+            // Email validation
+            if (!email.value) {
+                showError(email, emailError, currentLanguage === 'en' ? 'Email is required' : 'ଇମେଲ୍ ଆବଶ୍ୟକ');
+                isValid = false;
+            } else if (!isValidEmail(email.value)) {
+                showError(email, emailError, currentLanguage === 'en' ? 'Please enter a valid email address' : 'ଦୟାକରି ଏକ ବୈଧ ଇମେଲ୍ ଠିକଣା ପ୍ରବେଶ କରନ୍ତୁ');
+                isValid = false;
+            }
+            
+            // Password validation
+            if (!password.value) {
+                showError(password, passwordError, currentLanguage === 'en' ? 'Password is required' : 'ପାସୱାର୍ଡ୍ ଆବଶ୍ୟକ');
+                isValid = false;
+            } else if (password.value.length < 8) {
+                showError(password, passwordError, currentLanguage === 'en' ? 'Password must be at least 8 characters' : 'ପାସୱାର୍ଡ୍ ଅତିକମରେ 8 ଅକ୍ଷରର ହୋଇଥିବା ଉଚିତ');
+                isValid = false;
+            }
+            
+            // Confirm password validation
+            if (!confirmPassword.value) {
+                showError(confirmPassword, confirmPasswordError, currentLanguage === 'en' ? 'Please confirm your password' : 'ଦୟାକରି ଆପଣଙ୍କର ପାସୱାର୍ଡ୍ ନିଶ୍ଚିତ କରନ୍ତୁ');
+                isValid = false;
+            } else if (password.value !== confirmPassword.value) {
+                showError(confirmPassword, confirmPasswordError, currentLanguage === 'en' ? 'Passwords do not match' : 'ପାସୱାର୍ଡ୍ ମେଳ ଖାଉନାହିଁ');
+                isValid = false;
+            }
+            
+            // User type validation
+            if (!userType.value) {
+                showError(userType, userTypeError, currentLanguage === 'en' ? 'Please select your role' : 'ଦୟାକରି ଆପଣଙ୍କର ଭୂମିକା ଚୟନ କରନ୍ତୁ');
+                isValid = false;
+            }
+            
+            return isValid;
+        }
+        
+        function isValidEmail(email) {
+            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return re.test(email);
+        }
+        
+        function showError(input, errorElement, message) {
+            input.classList.add('error');
+            errorElement.textContent = message;
+            errorElement.style.display = 'block';
+        }
+        
+        function resetErrors(inputs, errorElements) {
+            inputs.forEach(input => {
+                input.classList.remove('error', 'success');
+            });
+            errorElements.forEach(error => {
+                error.style.display = 'none';
+            });
+        }
+        
+        function resetForm(form) {
+            form.reset();
+            const inputs = form.querySelectorAll('.form-control');
+            const errors = form.querySelectorAll('.error-message');
+            resetErrors(inputs, errors);
+            
+            // Reset password visibility toggles
+            const toggleIcons = form.querySelectorAll('.toggle-password i');
+            toggleIcons.forEach(icon => {
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            });
+            
+            const passwordInputs = form.querySelectorAll('input[type="text"][id*="Password"]');
+            passwordInputs.forEach(input => {
+                input.type = 'password';
+            });
+        }
+        
+        // Real-time validation for better UX
+        document.getElementById('loginEmail').addEventListener('blur', function() {
+            if (this.value && !isValidEmail(this.value)) {
+                showError(this, document.getElementById('loginEmailError'), currentLanguage === 'en' ? 'Please enter a valid email address' : 'ଦୟାକରି ଏକ ବୈଧ ଇମେଲ୍ ଠିକଣା ପ୍ରବେଶ କରନ୍ତୁ');
+            } else if (this.value) {
+                this.classList.remove('error');
+                this.classList.add('success');
+                document.getElementById('loginEmailError').style.display = 'none';
+            }
+        });
+        
+        document.getElementById('signupEmail').addEventListener('blur', function() {
+            if (this.value && !isValidEmail(this.value)) {
+                showError(this, document.getElementById('signupEmailError'), currentLanguage === 'en' ? 'Please enter a valid email address' : 'ଦୟାକରି ଏକ ବୈଧ ଇମେଲ୍ ଠିକଣା ପ୍ରବେଶ କରନ୍ତୁ');
+            } else if (this.value) {
+                this.classList.remove('error');
+                this.classList.add('success');
+                document.getElementById('signupEmailError').style.display = 'none';
+            }
+        });
+        
+        document.getElementById('signupPassword').addEventListener('input', function() {
+            if (this.value.length > 0 && this.value.length < 8) {
+                showError(this, document.getElementById('signupPasswordError'), currentLanguage === 'en' ? 'Password must be at least 8 characters' : 'ପାସୱାର୍ଡ୍ ଅତିକମରେ 8 ଅକ୍ଷରର ହୋଇଥିବା ଉଚିତ');
+            } else if (this.value.length >= 8) {
+                this.classList.remove('error');
+                this.classList.add('success');
+                document.getElementById('signupPasswordError').style.display = 'none';
+            }
+        });
+        
+        document.getElementById('signupConfirmPassword').addEventListener('input', function() {
+            const password = document.getElementById('signupPassword').value;
+            if (this.value !== password) {
+                showError(this, document.getElementById('signupConfirmPasswordError'), currentLanguage === 'en' ? 'Passwords do not match' : 'ପାସୱାର୍ଡ୍ ମେଳ ଖାଉନାହିଁ');
+            } else if (this.value === password && this.value.length > 0) {
+                this.classList.remove('error');
+                this.classList.add('success');
+                document.getElementById('signupConfirmPasswordError').style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>

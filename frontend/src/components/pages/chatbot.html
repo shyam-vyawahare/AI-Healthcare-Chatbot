@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HealthMitra: Chatbot for Disease Awareness</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #2c3e50;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, #3498db, #2ecc71);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            color: #34495e;
+            max-width: 600px;
+            line-height: 1.6;
+        }
+
+        .chatbot-widget {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, #3498db, #2ecc71);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            transition: all 0.3s ease;
+            animation: pulse 2s infinite;
+        }
+
+        .chatbot-widget:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .chatbot-widget i {
+            font-size: 30px;
+            color: white;
+        }
+
+        .chatbot-container {
+            position: fixed;
+            bottom: 120px;
+            right: 30px;
+            width: 400px;
+            height: 600px;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            display: none;
+            flex-direction: column;
+            z-index: 1000;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .chatbot-container.active {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .chatbot-header {
+            background: linear-gradient(135deg, #3498db, #2ecc71);
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 15px 15px 0 0;
+        }
+
+        .chatbot-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .chatbot-title i {
+            font-size: 1.3rem;
+        }
+
+        .close-chatbot {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .close-chatbot:hover {
+            transform: scale(1.2);
+        }
+
+        .chatbot-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            background-color: #f8f9fa;
+        }
+
+        .message {
+            max-width: 80%;
+            padding: 12px 16px;
+            border-radius: 18px;
+            line-height: 1.4;
+            position: relative;
+            animation: messageAppear 0.3s ease;
+        }
+
+        .user-message {
+            align-self: flex-end;
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            border-bottom-right-radius: 5px;
+        }
+
+        .bot-message {
+            align-self: flex-start;
+            background-color: white;
+            color: #2c3e50;
+            border: 1px solid #e0e0e0;
+            border-bottom-left-radius: 5px;
+        }
+
+        .typing-indicator {
+            display: flex;
+            align-self: flex-start;
+            background-color: white;
+            padding: 12px 16px;
+            border-radius: 18px;
+            border-bottom-left-radius: 5px;
+            border: 1px solid #e0e0e0;
+            max-width: 80%;
+        }
+
+        .typing-indicator span {
+            height: 8px;
+            width: 8px;
+            background-color: #95a5a6;
+            border-radius: 50%;
+            display: inline-block;
+            margin: 0 2px;
+            animation: typing 1.5s infinite;
+        }
+
+        .typing-indicator span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-indicator span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        .chatbot-input {
+            display: flex;
+            padding: 15px;
+            background-color: white;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .chatbot-input input {
+            flex: 1;
+            padding: 12px 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 25px;
+            outline: none;
+            font-size: 0.95rem;
+            transition: border-color 0.3s;
+        }
+
+        .chatbot-input input:focus {
+            border-color: #3498db;
+        }
+
+        .chatbot-input button {
+            background: linear-gradient(135deg, #3498db, #2ecc71);
+            color: white;
+            border: none;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            margin-left: 10px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .chatbot-input button:hover {
+            transform: scale(1.05);
+        }
+
+        .quick-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            padding: 0 15px 15px;
+            background-color: white;
+        }
+
+        .quick-option {
+            background-color: #e8f4fc;
+            border: 1px solid #3498db;
+            color: #2980b9;
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .quick-option:hover {
+            background-color: #3498db;
+            color: white;
+        }
+
+        .disclaimer {
+            font-size: 0.7rem;
+            color: #7f8c8d;
+            text-align: center;
+            padding: 10px 15px;
+            background-color: #f8f9fa;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(52, 152, 219, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(52, 152, 219, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(52, 152, 219, 0); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes messageAppear {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes typing {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        @media (max-width: 500px) {
+            .chatbot-container {
+                width: 90vw;
+                height: 70vh;
+                right: 5vw;
+                bottom: 100px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .header p {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>HealthMitra</h1>
+        <p>Your AI-powered health companion for disease awareness and symptom analysis</p>
+    </div>
+
+    <!-- AI Chatbot Widget -->
+    <div class="chatbot-widget" id="chatbotToggle">
+        <i class="fas fa-robot"></i>
+    </div>
+
+    <div class="chatbot-container" id="chatbotContainer">
+        <div class="chatbot-header">
+            <div class="chatbot-title">
+                <i class="fas fa-robot"></i>
+                <span>HealthMitra AI Assistant</span>
+            </div>
+            <button class="close-chatbot" id="closeChatbot">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="chatbot-messages" id="chatbotMessages">
+            <div class="message bot-message">
+                Hello! I'm HealthMitra, your AI health assistant. I'm here to provide information about common diseases and help you understand symptoms. How can I assist you today?
+            </div>
+            <div class="message bot-message">
+                You can ask me about symptoms, diseases, prevention tips, or use the quick options below.
+            </div>
+        </div>
+        <div class="quick-options" id="quickOptions">
+            <div class="quick-option" data-option="fever">Fever & Cold</div>
+            <div class="quick-option" data-option="headache">Headache</div>
+            <div class="quick-option" data-option="stomach">Stomach Issues</div>
+            <div class="quick-option" data-option="covid">COVID-19</div>
+            <div class="quick-option" data-option="diabetes">Diabetes</div>
+            <div class="quick-option" data-option="hypertension">Hypertension</div>
+        </div>
+        <div class="chatbot-input">
+            <input type="text" id="chatbotInput" placeholder="Describe your symptoms or ask a health question...">
+            <button id="sendMessage"><i class="fas fa-paper-plane"></i></button>
+        </div>
+        <div class="disclaimer">
+            Note: HealthMitra provides informational support only. Please consult a healthcare professional for medical advice.
+        </div>
+    </div>
+
+    <script>
+        // HealthMitra JSON response database
+        const healthDatabase = {
+            "categories": [
+                {
+                    "name": "general",
+                    "questions": [
+                        {
+                            "question": "what is health",
+                            "answer": "Health is a state of complete physical, mental, and social well-being, not merely the absence of disease or infirmity."
+                        },
+                        {
+                            "question": "how to stay healthy",
+                            "answer": "Maintain a balanced diet, exercise regularly, get adequate sleep, manage stress, avoid harmful substances, and have regular health check-ups."
+                        },
+                        {
+                            "question": "what is a balanced diet",
+                            "answer": "A balanced diet includes fruits, vegetables, whole grains, lean proteins, and healthy fats in appropriate proportions to provide essential nutrients."
+                        },
+                        {
+                            "question": "how much water should i drink daily",
+                            "answer": "Most adults need about 8-10 glasses (2-2.5 liters) of water daily, but this can vary based on activity level, climate, and individual needs."
+                        },
+                        {
+                            "question": "how much sleep do i need",
+                            "answer": "Adults typically need 7-9 hours of quality sleep per night for optimal health and functioning."
+                        },
+                        {
+                            "question": "what is bmi",
+                            "answer": "BMI (Body Mass Index) is a measure of body fat based on height and weight. It's calculated as weight in kilograms divided by height in meters squared."
+                        }
+                    ]
+                },
+                {
+                    "name": "fever",
+                    "questions": [
+                        {
+                            "question": "what is fever",
+                            "answer": "Fever is a temporary increase in body temperature, often a sign that your body is fighting an infection. Normal body temperature is around 98.6°F (37°C)."
+                        },
+                        {
+                            "question": "what causes fever",
+                            "answer": "Fever can be caused by infections (viral, bacterial), inflammatory conditions, medications, heat exhaustion, or certain medical conditions."
+                        },
+                        {
+                            "question": "how to reduce fever",
+                            "answer": "Rest, drink plenty of fluids, use cool compresses, take fever-reducing medication like acetaminophen or ibuprofen (follow dosage instructions)."
+                        },
+                        {
+                            "question": "when to worry about fever",
+                            "answer": "Seek medical attention if fever is over 103°F (39.4°C), lasts more than 3 days, or is accompanied by severe symptoms like stiff neck, confusion, or difficulty breathing."
+                        },
+                        {
+                            "question": "what is normal body temperature",
+                            "answer": "Normal body temperature is typically around 98.6°F (37°C), but it can vary slightly from person to person and throughout the day."
+                        }
+                    ]
+                },
+                {
+                    "name": "headache",
+                    "questions": [
+                        {
+                            "question": "what causes headaches",
+                            "answer": "Headaches can be caused by tension, dehydration, sinus issues, eye strain, lack of sleep, stress, certain foods, or underlying medical conditions."
+                        },
+                        {
+                            "question": "how to relieve headache",
+                            "answer": "Rest in a quiet dark room, apply cool compress, stay hydrated, practice relaxation techniques, and consider over-the-counter pain relievers if appropriate."
+                        },
+                        {
+                            "question": "when is headache dangerous",
+                            "answer": "Seek immediate medical care for sudden severe headache, headache after head injury, headache with fever/stiff neck/confusion, or worst headache of your life."
+                        },
+                        {
+                            "question": "what is migraine",
+                            "answer": "Migraine is a neurological condition characterized by moderate to severe throbbing pain, often on one side of the head, sometimes with nausea, vomiting, and sensitivity to light/sound."
+                        },
+                        {
+                            "question": "migraine triggers",
+                            "answer": "Common triggers include stress, hormonal changes, certain foods (aged cheese, processed meats), skipped meals, weather changes, bright lights, and strong smells."
+                        }
+                    ]
+                },
+                {
+                    "name": "stomach",
+                    "questions": [
+                        {
+                            "question": "what causes stomach pain",
+                            "answer": "Stomach pain can result from indigestion, gas, constipation, food poisoning, infections, inflammation, ulcers, or more serious conditions like appendicitis."
+                        },
+                        {
+                            "question": "how to relieve stomach pain",
+                            "answer": "Try the BRAT diet (bananas, rice, applesauce, toast), ginger tea, peppermint, heating pad, and avoid spicy/fatty foods. Rest and stay hydrated."
+                        },
+                        {
+                            "question": "what is indigestion",
+                            "answer": "Indigestion (dyspepsia) is discomfort in the upper abdomen often accompanied by bloating, belching, nausea, or feeling full too quickly while eating."
+                        },
+                        {
+                            "question": "what causes diarrhea",
+                            "answer": "Diarrhea can be caused by infections, food poisoning, medications, food intolerances, inflammatory bowel disease, or digestive disorders."
+                        },
+                        {
+                            "question": "how to stop diarrhea",
+                            "answer": "Stay hydrated with water, broth, or oral rehydration solutions. Eat bland foods, avoid dairy and fatty foods, and consider over-the-counter anti-diarrheal medications."
+                        }
+                    ]
+                },
+                {
+                    "name": "covid",
+                    "questions": [
+                        {
+                            "question": "what is covid-19",
+                            "answer": "COVID-19 is an infectious disease caused by the SARS-CoV-2 virus, first identified in 2019. It primarily spreads through respiratory droplets."
+                        },
+                        {
+                            "question": "covid symptoms",
+                            "answer": "Common symptoms include fever, cough, fatigue, loss of taste/smell, sore throat, headache, body aches, and difficulty breathing. Some people may be asymptomatic."
+                        },
+                        {
+                            "question": "how does covid spread",
+                            "answer": "COVID-19 spreads mainly through respiratory droplets when an infected person coughs, sneezes, talks, or breathes. It can also spread by touching contaminated surfaces."
+                        },
+                        {
+                            "question": "how to prevent covid",
+                            "answer": "Get vaccinated, wear masks in crowded places, practice good hand hygiene, maintain physical distance, ensure good ventilation, and stay home when sick."
+                        },
+                        {
+                            "question": "what to do if you have covid",
+                            "answer": "Isolate from others, rest, stay hydrated, monitor symptoms, use over-the-counter medications for fever/pain, and seek medical care if symptoms worsen or breathing difficulties occur."
+                        }
+                    ]
+                },
+                {
+                    "name": "diabetes",
+                    "questions": [
+                        {
+                            "question": "what is diabetes",
+                            "answer": "Diabetes is a chronic condition that affects how your body processes blood sugar (glucose). There are type 1 (autoimmune) and type 2 (insulin resistance) diabetes."
+                        },
+                        {
+                            "question": "diabetes symptoms",
+                            "answer": "Common symptoms include increased thirst, frequent urination, extreme hunger, unexplained weight loss, fatigue, blurred vision, and slow-healing sores."
+                        },
+                        {
+                            "question": "what causes diabetes",
+                            "answer": "Type 1 diabetes is an autoimmune condition. Type 2 diabetes is influenced by genetics, obesity, physical inactivity, and poor diet. Gestational diabetes occurs during pregnancy."
+                        },
+                        {
+                            "question": "how to prevent diabetes",
+                            "answer": "Maintain healthy weight, exercise regularly, eat a balanced diet rich in fiber, limit sugar and processed foods, don't smoke, and have regular health screenings."
+                        },
+                        {
+                            "question": "diabetes treatment",
+                            "answer": "Treatment may include lifestyle changes, oral medications, insulin therapy, blood sugar monitoring, and management of related health conditions."
+                        }
+                    ]
+                },
+                {
+                    "name": "hypertension",
+                    "questions": [
+                        {
+                            "question": "what is hypertension",
+                            "answer": "Hypertension, or high blood pressure, is a condition where the force of blood against artery walls is consistently too high, potentially damaging blood vessels and organs."
+                        },
+                        {
+                            "question": "what causes high blood pressure",
+                            "answer": "Causes include genetics, age, obesity, physical inactivity, high salt intake, excessive alcohol, stress, smoking, and certain medical conditions or medications."
+                        },
+                        {
+                            "question": "hypertension symptoms",
+                            "answer": "Hypertension is often called the 'silent killer' because it typically has no symptoms until significant damage has occurred. Severe hypertension may cause headaches, shortness of breath, or nosebleeds."
+                        },
+                        {
+                            "question": "how to lower blood pressure",
+                            "answer": "Reduce salt intake, eat more fruits/vegetables, exercise regularly, maintain healthy weight, limit alcohol, manage stress, quit smoking, and take prescribed medications."
+                        },
+                        {
+                            "question": "dash diet",
+                            "answer": "The DASH (Dietary Approaches to Stop Hypertension) diet emphasizes fruits, vegetables, whole grains, lean proteins, and low-fat dairy while limiting salt, sugar, and saturated fats."
+                        }
+                    ]
+                }
+            ],
+            "greetings": [
+                "Hello! How can I assist with your health concerns today?",
+                "Hi there! I'm here to help with health-related questions. What's on your mind?",
+                "Hey! I'm HealthMitra. How can I help you today?"
+            ],
+            "thanks": [
+                "You're welcome! I'm glad I could help. Feel free to ask if you have more health questions.",
+                "You're welcome! Take care of your health and don't hesitate to reach out if you need more information.",
+                "Happy to help! Remember that I'm here whenever you have health-related questions."
+            ],
+            "fallback": [
+                "I'm designed to provide general health information. For specific symptoms or conditions, it's always best to consult with a healthcare professional who can evaluate your individual situation.",
+                "I understand you're asking about health concerns. While I can provide general information, a healthcare provider can give you personalized advice based on your specific situation.",
+                "That's an important health question. For accurate diagnosis and treatment, I recommend consulting with a medical professional who can assess your individual needs.",
+                "I'm here to help with health awareness. For medical advice tailored to your situation, it's best to speak directly with a healthcare provider."
+            ]
+        };
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const chatbotToggle = document.getElementById('chatbotToggle');
+            const chatbotContainer = document.getElementById('chatbotContainer');
+            const closeChatbot = document.getElementById('closeChatbot');
+            const chatbotMessages = document.getElementById('chatbotMessages');
+            const chatbotInput = document.getElementById('chatbotInput');
+            const sendMessage = document.getElementById('sendMessage');
+            const quickOptions = document.getElementById('quickOptions');
+            
+            // Toggle chatbot visibility
+            chatbotToggle.addEventListener('click', function() {
+                chatbotContainer.classList.add('active');
+            });
+            
+            closeChatbot.addEventListener('click', function() {
+                chatbotContainer.classList.remove('active');
+            });
+            
+            // Send message on button click
+            sendMessage.addEventListener('click', function() {
+                sendUserMessage();
+            });
+            
+            // Send message on Enter key
+            chatbotInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    sendUserMessage();
+                }
+            });
+            
+            // Quick options functionality
+            quickOptions.querySelectorAll('.quick-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    const optionText = this.textContent;
+                    chatbotInput.value = optionText;
+                    sendUserMessage();
+                });
+            });
+            
+            function sendUserMessage() {
+                const message = chatbotInput.value.trim();
+                if (message === '') return;
+                
+                // Add user message to chat
+                addMessage(message, 'user');
+                chatbotInput.value = '';
+                
+                // Show typing indicator
+                showTypingIndicator();
+                
+                // Simulate AI response after a delay
+                setTimeout(() => {
+                    removeTypingIndicator();
+                    const response = generateResponse(message);
+                    addMessage(response, 'bot');
+                    
+                    // Scroll to bottom of messages
+                    chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+                }, 1500);
+            }
+            
+            function addMessage(text, sender) {
+                const messageElement = document.createElement('div');
+                messageElement.classList.add('message', `${sender}-message`);
+                messageElement.textContent = text;
+                chatbotMessages.appendChild(messageElement);
+                
+                // Scroll to bottom of messages
+                chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+            }
+            
+            function showTypingIndicator() {
+                const typingElement = document.createElement('div');
+                typingElement.classList.add('typing-indicator');
+                typingElement.id = 'typingIndicator';
+                typingElement.innerHTML = '<span></span><span></span><span></span>';
+                chatbotMessages.appendChild(typingElement);
+                
+                // Scroll to bottom of messages
+                chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+            }
+            
+            function removeTypingIndicator() {
+                const typingIndicator = document.getElementById('typingIndicator');
+                if (typingIndicator) {
+                    typingIndicator.remove();
+                }
+            }
+            
+            function generateResponse(userMessage) {
+                const lowerMessage = userMessage.toLowerCase();
+                
+                // Search through all categories for matching questions
+                for (const category of healthDatabase.categories) {
+                    for (const qa of category.questions) {
+                        if (lowerMessage.includes(qa.question.toLowerCase())) {
+                            return qa.answer;
+                        }
+                    }
+                }
+                
+                // Greeting responses
+                if (lowerMessage.includes('hello') || lowerMessage.includes('hi') || lowerMessage.includes('hey')) {
+                    return getRandomResponse(healthDatabase.greetings);
+                }
+                
+                // Thank you responses
+                if (lowerMessage.includes('thank') || lowerMessage.includes('thanks')) {
+                    return getRandomResponse(healthDatabase.thanks);
+                }
+                
+                // Default response for unrecognized queries
+                return getRandomResponse(healthDatabase.fallback);
+            }
+            
+            function getRandomResponse(responses) {
+                return responses[Math.floor(Math.random() * responses.length)];
+            }
+        });
+    </script>
+</body>
+</html>

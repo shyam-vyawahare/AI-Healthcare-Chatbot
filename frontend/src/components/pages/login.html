@@ -1,0 +1,1359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HealthAssist AI | Next-Gen Health Portal</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #1976d2;
+            --primary-dark: #1565c0;
+            --primary-light: #42a5f5;
+            --secondary: #d32f2f;
+            --accent: #ff8f00;
+            --light-bg: #f8f9fa;
+            --white: #ffffff;
+            --text: #333333;
+            --text-light: #666666;
+            --text-muted: #888888;
+            --border: #e0e0e0;
+            --shadow: rgba(0, 0, 0, 0.08);
+            --success: #4caf50;
+            --warning: #ff9800;
+            --card-bg: #ffffff;
+            --error: #f44336;
+            --gradient-primary: linear-gradient(135deg, #1976d2 0%, #42a5f5 100%);
+            --gradient-secondary: linear-gradient(135deg, #d32f2f 0%, #ff8f00 100%);
+            --gradient-light: linear-gradient(135deg, #e3f2fd 0%, #f8f9fa 100%);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background: var(--gradient-light);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            position: relative;
+        }
+        
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxkZWZzPjxwYXR0ZXJuIGlkPSJwYXR0ZXJuIiB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgcj0iMiIgZmlsbD0icmdiYSgyNSwxMTgsMjEwLDAuMSkiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjcGF0dGVybikiLz48L3N2Zz4=');
+            opacity: 0.5;
+            z-index: -1;
+        }
+        
+        .floating-elements {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .floating-element {
+            position: absolute;
+            background: var(--white);
+            border-radius: 50%;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-size: 1.5rem;
+            animation: float 8s ease-in-out infinite;
+        }
+        
+        .floating-element:nth-child(1) {
+            width: 60px;
+            height: 60px;
+            top: 10%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+        
+        .floating-element:nth-child(2) {
+            width: 40px;
+            height: 40px;
+            top: 70%;
+            left: 5%;
+            animation-delay: 2s;
+        }
+        
+        .floating-element:nth-child(3) {
+            width: 50px;
+            height: 50px;
+            top: 40%;
+            right: 10%;
+            animation-delay: 4s;
+        }
+        
+        .floating-element:nth-child(4) {
+            width: 30px;
+            height: 30px;
+            top: 20%;
+            right: 20%;
+            animation-delay: 6s;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(10deg); }
+        }
+        
+        .demo-container {
+            max-width: 1000px;
+            width: 100%;
+            text-align: center;
+            padding: 50px;
+            background: var(--white);
+            border-radius: 25px;
+            box-shadow: 0 20px 50px rgba(25, 118, 210, 0.15);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+        
+        .demo-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: var(--gradient-primary);
+        }
+        
+        .demo-container::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxkZWZzPjxwYXR0ZXJuIGlkPSJwYXR0ZXJuIiB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgcGF0dGVyblRyYW5zZm9ybT0icm90YXRlKDEzNSkiPjxyZWN0IHdpZHRoPSI1MCIgaGVpZ2h0PSI1MCIgZmlsbD0icmdiYSgyNTUsMjU1LDI1NSwxKSIvPjxjaXJjbGUgY3g9IjI1IiBjeT0iMjUiIHI9IjEwIiBmaWxsPSJyZ2JhKDI1LDEyMCwyMTAsMC4wNSkiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjcGF0dGVybikiLz48L3N2Zz4=');
+            opacity: 0.3;
+            z-index: -1;
+        }
+        
+        .demo-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 3.2rem;
+            color: var(--primary-dark);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .demo-title i {
+            font-size: 3rem;
+        }
+        
+        .demo-subtitle {
+            font-size: 1.4rem;
+            color: var(--text-light);
+            margin-bottom: 40px;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .btn {
+            padding: 16px 40px;
+            border-radius: 50px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.4s;
+            display: inline-block;
+            text-align: center;
+            cursor: pointer;
+            border: none;
+            font-size: 1.1rem;
+            margin: 10px;
+            box-shadow: 0 5px 15px rgba(25, 118, 210, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s;
+        }
+        
+        .btn:hover::before {
+            left: 100%;
+        }
+        
+        .btn-primary {
+            background: var(--gradient-primary);
+            color: var(--white);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(25, 118, 210, 0.3);
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(25, 118, 210, 0.05);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(25, 118, 210, 0.1);
+        }
+        
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.3s ease;
+            backdrop-filter: blur(5px);
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .modal-content {
+            background-color: var(--white);
+            border-radius: 25px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            animation: slideUp 0.4s ease;
+            transform: translateY(0);
+        }
+        
+        @keyframes slideUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        .modal-header {
+            background: var(--gradient-primary);
+            color: var(--white);
+            padding: 35px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .modal-header h2 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+        
+        .modal-header h2 i {
+            font-size: 2rem;
+        }
+        
+        .modal-header p {
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+        
+        .close-btn {
+            position: absolute;
+            top: 25px;
+            right: 25px;
+            background: rgba(255, 255, 255, 0.2);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            z-index: 10;
+        }
+        
+        .close-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: rotate(90deg);
+        }
+        
+        .modal-body {
+            max-height: 70vh; 
+            overflow-y: auto;
+            padding: 40px;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+            text-align: left;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 12px;
+            font-weight: 600;
+            color: var(--text);
+            font-size: 1.05rem;
+        }
+        
+        .input-with-icon {
+            position: relative;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 18px 55px 18px 20px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s;
+            background-color: var(--light-bg);
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.1);
+        }
+        
+        .input-icon {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+        }
+        
+        .forgot-password {
+            text-align: right;
+            margin-top: -15px;
+            margin-bottom: 25px;
+        }
+        
+        .forgot-password a {
+            color: var(--primary);
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: color 0.3s;
+        }
+        
+        .forgot-password a:hover {
+            color: var(--primary-dark);
+            text-decoration: underline;
+        }
+        
+        .modal-footer {
+            text-align: center;
+            padding: 0 40px 40px;
+        }
+        
+        .modal-footer p {
+            color: var(--text-light);
+            margin-top: 25px;
+            font-size: 1rem;
+        }
+        
+        .modal-footer a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+        
+        .modal-footer a:hover {
+            color: var(--primary-dark);
+            text-decoration: underline;
+        }
+        
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 30px 0;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+        
+        .divider::before, .divider::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+        
+        .divider::before {
+            margin-right: 15px;
+        }
+        
+        .divider::after {
+            margin-left: 15px;
+        }
+        
+        .social-login {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .social-btn {
+            flex: 1;
+            padding: 14px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            background: var(--white);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+        
+        .social-btn:hover {
+            background: var(--light-bg);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px var(--shadow);
+        }
+        
+        .social-btn i {
+            font-size: 1.3rem;
+            margin-right: 10px;
+        }
+        
+        .google-btn {
+            color: #DB4437;
+        }
+        
+        .facebook-btn {
+            color: #4267B2;
+        }
+        
+        /* Form Validation Styles */
+        .error-message {
+            color: var(--error);
+            font-size: 0.9rem;
+            margin-top: 8px;
+            display: none;
+        }
+        
+        .form-control.error {
+            border-color: var(--error);
+        }
+        
+        .form-control.success {
+            border-color: var(--success);
+        }
+        
+        /* Toggle Password Visibility */
+        .toggle-password {
+            position: absolute;
+            right: 45px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: var(--text-muted);
+            z-index: 2;
+        }
+        
+        /* Features Section */
+        .features {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 50px;
+            gap: 25px;
+        }
+        
+        .feature {
+            width: 240px;
+            padding: 30px 25px;
+            margin: 10px;
+            background: var(--light-bg);
+            border-radius: 18px;
+            transition: all 0.4s;
+            border-left: 4px solid var(--primary);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .feature::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: var(--gradient-primary);
+            opacity: 0.05;
+            transition: left 0.4s;
+        }
+        
+        .feature:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 30px var(--shadow);
+        }
+        
+        .feature:hover::before {
+            left: 0;
+        }
+        
+        .feature i {
+            font-size: 2.8rem;
+            color: var(--primary);
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 2;
+            transition: transform 0.4s;
+        }
+        
+        .feature:hover i {
+            transform: scale(1.1);
+        }
+        
+        .feature h3 {
+            font-size: 1.3rem;
+            color: var(--primary-dark);
+            margin-bottom: 12px;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .feature p {
+            font-size: 0.95rem;
+            color: var(--text-light);
+            position: relative;
+            z-index: 2;
+        }
+        
+        /* Health Badge */
+        .health-badge {
+            display: inline-block;
+            background: rgba(25, 118, 210, 0.1);
+            color: var(--primary);
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-size: 1rem;
+            margin: 15px 0;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .health-badge:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(25, 118, 210, 0.2);
+        }
+        
+        /* Emergency Contact */
+        .emergency-contact {
+            margin-top: 40px;
+            padding: 20px;
+            background: #fff3e0;
+            border-radius: 15px;
+            border-left: 4px solid var(--accent);
+            transition: all 0.3s;
+        }
+        
+        .emergency-contact:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(255, 143, 0, 0.1);
+        }
+        
+        .emergency-contact h4 {
+            color: var(--accent);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.2rem;
+        }
+        
+        .emergency-contact p {
+            font-size: 0.95rem;
+            color: var(--text-light);
+        }
+        
+        /* Language Toggle */
+        .language-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1001;
+            display: flex;
+            background: var(--white);
+            border-radius: 50px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            border: 2px solid var(--primary);
+        }
+        
+        .lang-btn {
+            padding: 10px 15px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            color: var(--primary);
+        }
+        
+        .lang-btn.active {
+            background: var(--primary);
+            color: var(--white);
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .demo-container {
+                padding: 40px 30px;
+                margin: 20px;
+            }
+            
+            .demo-title {
+                font-size: 2.5rem;
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .demo-subtitle {
+                font-size: 1.2rem;
+            }
+            
+            .btn {
+                padding: 14px 30px;
+                font-size: 1rem;
+            }
+            
+            .features {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .feature {
+                width: 100%;
+                max-width: 320px;
+            }
+            
+            .modal-content {
+                width: 95%;
+            }
+            
+            .modal-header, .modal-body, .modal-footer {
+                padding: 30px 25px;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .demo-container {
+                padding: 30px 20px;
+            }
+            
+            .demo-title {
+                font-size: 2rem;
+            }
+            
+            .demo-subtitle {
+                font-size: 1.1rem;
+            }
+            
+            .social-login {
+                flex-direction: column;
+            }
+            
+            .modal-header, .modal-body, .modal-footer {
+                padding: 25px 20px;
+            }
+            
+            .language-toggle {
+                top: 10px;
+                right: 10px;
+            }
+        }
+        
+        /* Animation Classes */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s, transform 0.6s;
+        }
+        
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* Oriya Font */
+        .oriya {
+            font-family: 'Baloo Bhai 2', cursive;
+        }
+    </style>
+</head>
+<body>
+    <div class="floating-elements">
+        <div class="floating-element"><i class="fas fa-heartbeat"></i></div>
+        <div class="floating-element"><i class="fas fa-stethoscope"></i></div>
+        <div class="floating-element"><i class="fas fa-pills"></i></div>
+        <div class="floating-element"><i class="fas fa-user-md"></i></div>
+    </div>
+    
+    <!-- Language Toggle -->
+    <div class="language-toggle">
+        <button class="lang-btn active" id="englishBtn">EN</button>
+        <button class="lang-btn" id="oriyaBtn">ଓଡ଼ିଆ</button>
+    </div>
+
+    <div class="demo-container">
+        <h1 class="demo-title fade-in">
+            <i class="fas fa-heartbeat"></i> <span class="logo-text" data-en="HealthAssist AI" data-oriya="ସ୍ୱାସ୍ଥ୍ୟ ସହାୟକ AI">HealthAssist AI</span>
+        </h1>
+        <p class="demo-subtitle fade-in" data-en="Your AI-powered health assistant for symptom checking, medicine information, and healthcare services" data-oriya="ଲକ୍ଷଣ ଯାଞ୍ଚ, ଔଷଧ ସୂଚନା, ଏବଂ ସ୍ୱାସ୍ଥ୍ୟସେବା ପାଇଁ ଆପଣଙ୍କର AI-ଚାଳିତ ସ୍ୱାସ୍ଥ୍ୟ ସହାୟକ">Your AI-powered health assistant for symptom checking, medicine information, and healthcare services</p>
+        
+        <div class="health-badge fade-in">
+            <i class="fas fa-shield-alt"></i> <span data-en="Secure & HIPAA Compliant" data-oriya="ସୁରକ୍ଷିତ ଏବଂ HIPAA ଅନୁଯାୟୀ">Secure & HIPAA Compliant</span>
+        </div>
+        
+        <div style="margin: 30px 0;" class="fade-in">
+            <button class="btn btn-primary" id="loginBtn">
+                <i class="fas fa-sign-in-alt"></i> <span data-en="Login to Health Portal" data-oriya="ସ୍ୱାସ୍ଥ୍ୟ ପୋର୍ଟାଲରେ ଲଗଇନ୍ କରନ୍ତୁ">Login to Health Portal</span>
+            </button>
+            
+            <button class="btn btn-secondary" id="signupBtn">
+                <i class="fas fa-user-plus"></i> <span data-en="Create Health Account" data-oriya="ସ୍ୱାସ୍ଥ୍ୟ ଆକାଉଣ୍ଟ୍ ସୃଷ୍ଟି କରନ୍ତୁ">Create Health Account</span>
+            </button>
+        </div>
+        
+        <div class="features">
+            <div class="feature fade-in">
+                <i class="fas fa-stethoscope"></i>
+                <h3 data-en="Symptom Checker" data-oriya="ଲକ୍ଷଣ ଯାଞ୍ଚକାରୀ">Symptom Checker</h3>
+                <p data-en="AI-powered analysis of symptoms with accurate assessments" data-oriya="ସଠିକ ମୂଲ୍ୟାଙ୍କନ ସହିତ ଲକ୍ଷଣର AI-ଚାଳିତ ବିଶ୍ଳେଷଣ">AI-powered analysis of symptoms with accurate assessments</p>
+            </div>
+            <div class="feature fade-in">
+                <i class="fas fa-pills"></i>
+                <h3 data-en="Medicine Finder" data-oriya="ଔଷଧ ଖୋଜକ">Medicine Finder</h3>
+                <p data-en="Find medications and check availability at local pharmacies" data-oriya="ସ୍ଥାନୀୟ ଫାର୍ମାସିରେ ଔଷଧ ଖୋଜନ୍ତୁ ଏବଂ ଉପଲବ୍ଧତା ଯାଞ୍ଚ କରନ୍ତୁ">Find medications and check availability at local pharmacies</p>
+            </div>
+            <div class="feature fade-in">
+                <i class="fas fa-user-md"></i>
+                <h3 data-en="Doctor Consult" data-oriya="ଡାକ୍ତର ପରାମର୍ଶ">Doctor Consult</h3>
+                <p data-en="Book appointments and access telemedicine services" data-oriya="ନିଯୁକ୍ତି ବୁକ୍ କରନ୍ତୁ ଏବଂ ଟେଲିମେଡିସିନ୍ ସେବା ପ୍ରବେଶ କରନ୍ତୁ">Book appointments and access telemedicine services</p>
+            </div>
+        </div>
+        
+        <div class="emergency-contact fade-in">
+            <h4><i class="fas fa-ambulance"></i> <span data-en="Emergency Assistance" data-oriya="ଜରୁରୀ ସହାୟତା">Emergency Assistance</span></h4>
+            <p data-en="For medical emergencies, please call your local emergency number immediately. Our AI assistant is not a substitute for emergency medical care." data-oriya="ଚିକିତ୍ସା ଜରୁରୀକାଳୀନ ପରିସ୍ଥିତି ପାଇଁ, ଦୟାକରି ତୁରନ୍ତ ଆପଣଙ୍କର ସ୍ଥାନୀୟ ଜରୁରୀ ନମ୍ବରକୁ କଲ୍ କରନ୍ତୁ। ଆମର AI ସହାୟକ ଜରୁରୀ ଚିକିତ୍ସା ଯତ୍ନର ବିକଳ୍ପ ନୁହେଁ।">For medical emergencies, please call your local emergency number immediately. Our AI assistant is not a substitute for emergency medical care.</p>
+        </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div class="modal" id="loginModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="close-btn" id="closeLogin">
+                    <i class="fas fa-times"></i>
+                </div>
+                <h2><i class="fas fa-heartbeat"></i> <span data-en="Welcome Back" data-oriya="ପୁନର୍ବାର ସ୍ୱାଗତ">Welcome Back</span></h2>
+                <p data-en="Sign in to your HealthAssist AI account" data-oriya="ଆପଣଙ୍କର HealthAssist AI ଆକାଉଣ୍ଟରେ ସାଇନ୍ ଇନ୍ କରନ୍ତୁ">Sign in to your HealthAssist AI account</p>
+            </div>
+            <div class="modal-body">
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="loginEmail" data-en="Email Address" data-oriya="ଇମେଲ୍ ଠିକଣା">Email Address</label>
+                        <div class="input-with-icon">
+                            <input type="email" class="form-control" id="loginEmail" data-en-placeholder="Enter your email" data-oriya-placeholder="ଆପଣଙ୍କର ଇମେଲ୍ ପ୍ରବେଶ କରନ୍ତୁ" placeholder="Enter your email">
+                            <div class="input-icon">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                        </div>
+                        <div class="error-message" id="loginEmailError" data-en="Please enter a valid email address" data-oriya="ଦୟାକରି ଏକ ବୈଧ ଇମେଲ୍ ଠିକଣା ପ୍ରବେଶ କରନ୍ତୁ">Please enter a valid email address</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="loginPassword" data-en="Password" data-oriya="ପାସୱାର୍ଡ">Password</label>
+                        <div class="input-with-icon">
+                            <input type="password" class="form-control" id="loginPassword" data-en-placeholder="Enter your password" data-oriya-placeholder="ଆପଣଙ୍କର ପାସୱାର୍ଡ୍ ପ୍ରବେଶ କରନ୍ତୁ" placeholder="Enter your password">
+                            <span class="toggle-password" id="toggleLoginPassword">
+                                <i class="fas fa-eye"></i>
+                            </span>
+                            <div class="input-icon">
+                                <i class="fas fa-lock"></i>
+                            </div>
+                        </div>
+                        <div class="error-message" id="loginPasswordError" data-en="Password must be at least 6 characters" data-oriya="ପାସୱାର୍ଡ୍ ଅତିକମରେ 6 ଅକ୍ଷରର ହୋଇଥିବା ଉଚିତ">Password must be at least 6 characters</div>
+                    </div>
+                    
+                    <div class="forgot-password">
+                        <a href="#" data-en="Forgot your password?" data-oriya="ଆପଣଙ୍କର ପାସୱାର୍ଡ୍ ଭୁଲି ଗଲେ?">Forgot your password?</a>
+                    </div>
+                    
+                    <a href="home_for_old.html" class="btn btn-primary" style="width: 100%; padding: 18px; display: inline-block; text-align: center; text-decoration: none;">
+                        <i class="fas fa-sign-in-alt"></i> <span data-en="Login to your Health Account" data-oriya="ଆପଣଙ୍କର ସ୍ୱାସ୍ଥ୍ୟ ଆକାଉଣ୍ଟରେ ଲଗଇନ୍ କରନ୍ତୁ">Login to your Health Account</span>
+                    </a>
+                </form>
+                
+                <div class="divider" data-en="or continue with" data-oriya="କିମ୍ବା ଜାରି ରଖନ୍ତୁ">or continue with</div>
+                
+                <div class="social-login">
+                    <button class="social-btn google-btn">
+                        <i class="fab fa-google"></i> Google
+                    </button>
+                    <button class="social-btn facebook-btn">
+                        <i class="fab fa-facebook-f"></i> Facebook
+                    </button>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <p data-en="Don't have an account?" data-oriya="ଆକାଉଣ୍ଟ୍ ନାହିଁ?">Don't have an account? <a href="#" id="switchToSignup" data-en="Sign up for health services" data-oriya="ସ୍ୱାସ୍ଥ୍ୟ ସେବା ପାଇଁ ସାଇନ୍ ଅପ୍ କରନ୍ତୁ">Sign up for health services</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Signup Modal -->
+    <div class="modal" id="signupModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="close-btn" id="closeSignup">
+                    <i class="fas fa-times"></i>
+                </div>
+                <h2><i class="fas fa-user-plus"></i> <span data-en="Create Health Account" data-oriya="ସ୍ୱାସ୍ଥ୍ୟ ଆକାଉଣ୍ଟ୍ ସୃଷ୍ଟି କରନ୍ତୁ">Create Health Account</span></h2>
+                <p data-en="Join HealthAssist AI for personalized health assistance" data-oriya="ବ୍ୟକ୍ତିଗତ ସ୍ୱାସ୍ଥ୍ୟ ସହାୟତା ପାଇଁ HealthAssist AI ରେ ଯୋଗ ଦିଅନ୍ତୁ">Join HealthAssist AI for personalized health assistance</p>
+            </div>
+            <div class="modal-body">
+                <form id="signupForm">
+                    <div class="form-group">
+                        <label for="signupName" data-en="Full Name" data-oriya="ପୂରା ନାମ">Full Name</label>
+                        <div class="input-with-icon">
+                            <input type="text" class="form-control" id="signupName" data-en-placeholder="Enter your full name" data-oriya-placeholder="ଆପଣଙ୍କର ପୂରା ନାମ ପ୍ରବେଶ କରନ୍ତୁ" placeholder="Enter your full name">
+                            <div class="input-icon">
+                                <i class="fas fa-user"></i>
+                            </div>
+                        </div>
+                        <div class="error-message" id="signupNameError" data-en="Please enter your full name" data-oriya="ଦୟାକରି ଆପଣଙ୍କର ପୂରା ନାମ ପ୍ରବେଶ କରନ୍ତୁ">Please enter your full name</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="signupEmail" data-en="Email Address" data-oriya="ଇମେଲ୍ ଠିକଣା">Email Address</label>
+                        <div class="input-with-icon">
+                            <input type="email" class="form-control" id="signupEmail" data-en-placeholder="Enter your email" data-oriya-placeholder="ଆପଣଙ୍କର ଇମେଲ୍ ପ୍ରବେଶ କରନ୍ତୁ" placeholder="Enter your email">
+                            <div class="input-icon">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                        </div>
+                        <div class="error-message" id="signupEmailError" data-en="Please enter a valid email address" data-oriya="ଦୟାକରି ଏକ ବୈଧ ଇମେଲ୍ ଠିକଣା ପ୍ରବେଶ କରନ୍ତୁ">Please enter a valid email address</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="signupPassword" data-en="Password" data-oriya="ପାସୱାର୍ଡ">Password</label>
+                        <div class="input-with-icon">
+                            <input type="password" class="form-control" id="signupPassword" data-en-placeholder="Create a secure password" data-oriya-placeholder="ଏକ ସୁରକ୍ଷିତ ପାସୱାର୍ଡ୍ ସୃଷ୍ଟି କରନ୍ତୁ" placeholder="Create a secure password">
+                            <span class="toggle-password" id="toggleSignupPassword">
+                                <i class="fas fa-eye"></i>
+                            </span>
+                            <div class="input-icon">
+                                <i class="fas fa-lock"></i>
+                            </div>
+                        </div>
+                        <div class="error-message" id="signupPasswordError" data-en="Password must be at least 8 characters" data-oriya="ପାସୱାର୍ଡ୍ ଅତିକମରେ 8 ଅକ୍ଷରର ହୋଇଥିବା ଉଚିତ">Password must be at least 8 characters</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="signupConfirmPassword" data-en="Confirm Password" data-oriya="ପାସୱାର୍ଡ୍ ନିଶ୍ଚିତ କରନ୍ତୁ">Confirm Password</label>
+                        <div class="input-with-icon">
+                            <input type="password" class="form-control" id="signupConfirmPassword" data-en-placeholder="Confirm your password" data-oriya-placeholder="ଆପଣଙ୍କର ପାସୱାର୍ଡ୍ ନିଶ୍ଚିତ କରନ୍ତୁ" placeholder="Confirm your password">
+                            <span class="toggle-password" id="toggleSignupConfirmPassword">
+                                <i class="fas fa-eye"></i>
+                            </span>
+                            <div class="input-icon">
+                                <i class="fas fa-lock"></i>
+                            </div>
+                        </div>
+                        <div class="error-message" id="signupConfirmPasswordError" data-en="Passwords do not match" data-oriya="ପାସୱାର୍ଡ୍ ମେଳ ଖାଉନାହିଁ">Passwords do not match</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="userType" data-en="I am a:" data-oriya="ମୁଁ ଜଣେ:">I am a:</label>
+                        <select class="form-control" id="userType">
+                            <option value="" data-en="Select your role" data-oriya="ଆପଣଙ୍କର ଭୂମିକା ଚୟନ କରନ୍ତୁ">Select your role</option>
+                            <option value="patient" data-en="Patient" data-oriya="ରୋଗୀ">Patient</option>
+                            <option value="caregiver" data-en="Caregiver" data-oriya="ଯତ୍ନନେତା">Caregiver</option>
+                            <option value="healthcare" data-en="Healthcare Professional" data-oriya="ସ୍ୱାସ୍ଥ୍ୟସେବା ବୃତ୍ତିଗତ">Healthcare Professional</option>
+                            <option value="researcher" data-en="Researcher" data-oriya="ଗବେଷକ">Researcher</option>
+                            <option value="other" data-en="Other" data-oriya="ଅନ୍ୟାନ୍ୟ">Other</option>
+                        </select>
+                        <div class="error-message" id="userTypeError" data-en="Please select your role" data-oriya="ଦୟାକରି ଆପଣଙ୍କର ଭୂମିକା ଚୟନ କରନ୍ତୁ">Please select your role</div>
+                    </div>
+                    
+                    <a href="home_for_old.html" class="btn btn-primary" style="width: 100%; padding: 18px; display: inline-block; text-align: center; text-decoration: none;">
+                        <i class="fas fa-user-plus"></i> <span data-en="Create Health Account" data-oriya="ସ୍ୱାସ୍ଥ୍ୟ ଆକାଉଣ୍ଟ୍ ସୃଷ୍ଟି କରନ୍ତୁ">Create Health Account</span>
+                    </a>
+                </form>
+                
+                <div class="divider" data-en="or sign up with" data-oriya="କିମ୍ବା ସହିତ ସାଇନ୍ ଅପ୍ କରନ୍ତୁ">or sign up with</div>
+                
+                <div class="social-login">
+                    <button class="social-btn google-btn">
+                        <i class="fab fa-google"></i> Google
+                    </button>
+                    <button class="social-btn facebook-btn">
+                        <i class="fab fa-facebook-f"></i> Facebook
+                    </button>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <p data-en="Already have an account?" data-oriya="ପୂର୍ବରୁ ଆକାଉଣ୍ଟ୍ ଅଛି?">Already have an account? <a href="#" id="switchToLogin" data-en="Sign in to your health portal" data-oriya="ଆପଣଙ୍କର ସ୍ୱାସ୍ଥ୍ୟ ପୋର୍ଟାଲରେ ସାଇନ୍ ଇନ୍ କରନ୍ତୁ">Sign in to your health portal</a></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Language Toggle
+        const englishBtn = document.getElementById('englishBtn');
+        const oriyaBtn = document.getElementById('oriyaBtn');
+        let currentLanguage = 'en';
+        
+        englishBtn.addEventListener('click', () => {
+            setLanguage('en');
+        });
+        
+        oriyaBtn.addEventListener('click', () => {
+            setLanguage('oriya');
+        });
+        
+        function setLanguage(lang) {
+            currentLanguage = lang;
+            
+            // Update active button
+            englishBtn.classList.toggle('active', lang === 'en');
+            oriyaBtn.classList.toggle('active', lang === 'oriya');
+            
+            // Update all elements with data attributes
+            document.querySelectorAll('[data-en]').forEach(element => {
+                if (lang === 'en') {
+                    if (element.hasAttribute('data-en-placeholder')) {
+                        element.placeholder = element.getAttribute('data-en-placeholder');
+                    } else {
+                        element.textContent = element.getAttribute('data-en');
+                    }
+                } else {
+                    if (element.hasAttribute('data-oriya-placeholder')) {
+                        element.placeholder = element.getAttribute('data-oriya-placeholder');
+                    } else {
+                        element.textContent = element.getAttribute('data-oriya');
+                    }
+                }
+            });
+            
+            // Update body class for font changes
+            if (lang === 'oriya') {
+                document.body.classList.add('oriya');
+            } else {
+                document.body.classList.remove('oriya');
+            }
+        }
+        
+        // Scroll animations
+        document.addEventListener('DOMContentLoaded', function() {
+            const fadeElements = document.querySelectorAll('.fade-in');
+            
+            const fadeInObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, { threshold: 0.1 });
+            
+            fadeElements.forEach(element => {
+                fadeInObserver.observe(element);
+            });
+        });
+
+        // DOM Elements
+        const loginBtn = document.getElementById('loginBtn');
+        const signupBtn = document.getElementById('signupBtn');
+        const loginModal = document.getElementById('loginModal');
+        const signupModal = document.getElementById('signupModal');
+        const closeLogin = document.getElementById('closeLogin');
+        const closeSignup = document.getElementById('closeSignup');
+        const switchToSignup = document.getElementById('switchToSignup');
+        const switchToLogin = document.getElementById('switchToLogin');
+        
+        // Toggle password visibility
+        const toggleLoginPassword = document.getElementById('toggleLoginPassword');
+        const toggleSignupPassword = document.getElementById('toggleSignupPassword');
+        const toggleSignupConfirmPassword = document.getElementById('toggleSignupConfirmPassword');
+        
+        // Form elements
+        const loginForm = document.getElementById('loginForm');
+        const signupForm = document.getElementById('signupForm');
+        
+        // Show Login Modal
+        loginBtn.addEventListener('click', () => {
+            loginModal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        });
+        
+        // Show Signup Modal
+        signupBtn.addEventListener('click', () => {
+            signupModal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        });
+        
+        // Close Modals
+        closeLogin.addEventListener('click', () => {
+            loginModal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+            resetForm(loginForm);
+        });
+        
+        closeSignup.addEventListener('click', () => {
+            signupModal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+            resetForm(signupForm);
+        });
+        
+        // Switch between Login and Signup
+        switchToSignup.addEventListener('click', (e) => {
+            e.preventDefault();
+            loginModal.style.display = 'none';
+            signupModal.style.display = 'flex';
+            resetForm(loginForm);
+        });
+        
+        switchToLogin.addEventListener('click', (e) => {
+            e.preventDefault();
+            signupModal.style.display = 'none';
+            loginModal.style.display = 'flex';
+            resetForm(signupForm);
+        });
+        
+        // Close modal when clicking outside
+        window.addEventListener('click', (e) => {
+            if (e.target === loginModal) {
+                loginModal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+                resetForm(loginForm);
+            }
+            if (e.target === signupModal) {
+                signupModal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+                resetForm(signupForm);
+            }
+        });
+        
+        // Toggle Password Visibility
+        toggleLoginPassword.addEventListener('click', () => {
+            const passwordInput = document.getElementById('loginPassword');
+            const icon = toggleLoginPassword.querySelector('i');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        });
+        
+        toggleSignupPassword.addEventListener('click', () => {
+            const passwordInput = document.getElementById('signupPassword');
+            const icon = toggleSignupPassword.querySelector('i');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        });
+        
+        toggleSignupConfirmPassword.addEventListener('click', () => {
+            const passwordInput = document.getElementById('signupConfirmPassword');
+            const icon = toggleSignupConfirmPassword.querySelector('i');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        });
+        
+        // Form Validation and Submission
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            if (validateLoginForm()) {
+                // Simulate login process
+                const submitBtn = loginForm.querySelector('button[type="submit"]');
+                const originalText = submitBtn ? submitBtn.innerHTML : '';
+                
+                if (submitBtn) {
+                    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> ' + (currentLanguage === 'en' ? 'Accessing Health Portal...' : 'ସ୍ୱାସ୍ଥ୍ୟ ପୋର୍ଟାଲ୍ ପ୍ରବେଶ କରୁଛି...');
+                    submitBtn.disabled = true;
+                }
+                
+                setTimeout(() => {
+                    alert(currentLanguage === 'en' ? 'Login successful! Redirecting to your health dashboard...' : 'ଲଗଇନ୍ ସଫଳ! ଆପଣଙ୍କର ସ୍ୱାସ୍ଥ୍ୟ ଡ୍ୟାସବୋର୍ଡ୍ କୁ ପୁନଃନିର୍ଦ୍ଦେଶିତ କରାଯାଉଛି...');
+                    loginModal.style.display = 'none';
+                    document.body.style.overflow = 'auto';
+                    resetForm(loginForm);
+                    if (submitBtn) {
+                        submitBtn.innerHTML = originalText;
+                        submitBtn.disabled = false;
+                    }
+                }, 1500);
+            }
+        });
+        
+        signupForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            if (validateSignupForm()) {
+                // Simulate signup process
+                const submitBtn = signupForm.querySelector('button[type="submit"]');
+                const originalText = submitBtn ? submitBtn.innerHTML : '';
+                
+                if (submitBtn) {
+                    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> ' + (currentLanguage === 'en' ? 'Creating Health Account...' : 'ସ୍ୱାସ୍ଥ୍ୟ ଆକାଉଣ୍ଟ୍ ସୃଷ୍ଟି ହେଉଛି...');
+                    submitBtn.disabled = true;
+                }
+                
+                setTimeout(() => {
+                    alert(currentLanguage === 'en' ? 'Health account created successfully! Please check your email for verification.' : 'ସ୍ୱାସ୍ଥ୍ୟ ଆକାଉଣ୍ଟ୍ ସଫଳତାର ସହିତ ସୃଷ୍ଟି ହୋଇଛି! ଦୟାକରି ଯାଞ୍ଚ ପାଇଁ ଆପଣଙ୍କର ଇମେଲ୍ ଯାଞ୍ଚ କରନ୍ତୁ।');
+                    signupModal.style.display = 'none';
+                    document.body.style.overflow = 'auto';
+                    resetForm(signupForm);
+                    if (submitBtn) {
+                        submitBtn.innerHTML = originalText;
+                        submitBtn.disabled = false;
+                    }
+                }, 1500);
+            }
+        });
+        
+        // Validation Functions
+        function validateLoginForm() {
+            let isValid = true;
+            const email = document.getElementById('loginEmail');
+            const password = document.getElementById('loginPassword');
+            const emailError = document.getElementById('loginEmailError');
+            const passwordError = document.getElementById('loginPasswordError');
+            
+            // Reset errors
+            resetErrors([email, password], [emailError, passwordError]);
+            
+            // Email validation
+            if (!email.value) {
+                showError(email, emailError, currentLanguage === 'en' ? 'Email is required' : 'ଇମେଲ୍ ଆବଶ୍ୟକ');
+                isValid = false;
+            } else if (!isValidEmail(email.value)) {
+                showError(email, emailError, currentLanguage === 'en' ? 'Please enter a valid email address' : 'ଦୟାକରି ଏକ ବୈଧ ଇମେଲ୍ ଠିକଣା ପ୍ରବେଶ କରନ୍ତୁ');
+                isValid = false;
+            }
+            
+            // Password validation
+            if (!password.value) {
+                showError(password, passwordError, currentLanguage === 'en' ? 'Password is required' : 'ପାସୱାର୍ଡ୍ ଆବଶ୍ୟକ');
+                isValid = false;
+            } else if (password.value.length < 6) {
+                showError(password, passwordError, currentLanguage === 'en' ? 'Password must be at least 6 characters' : 'ପାସୱାର୍ଡ୍ ଅତିକମରେ 6 ଅକ୍ଷରର ହୋଇଥିବା ଉଚିତ');
+                isValid = false;
+            }
+            
+            return isValid;
+        }
+        
+        function validateSignupForm() {
+            let isValid = true;
+            const name = document.getElementById('signupName');
+            const email = document.getElementById('signupEmail');
+            const password = document.getElementById('signupPassword');
+            const confirmPassword = document.getElementById('signupConfirmPassword');
+            const userType = document.getElementById('userType');
+            
+            const nameError = document.getElementById('signupNameError');
+            const emailError = document.getElementById('signupEmailError');
+            const passwordError = document.getElementById('signupPasswordError');
+            const confirmPasswordError = document.getElementById('signupConfirmPasswordError');
+            const userTypeError = document.getElementById('userTypeError');
+            
+            // Reset errors
+            resetErrors([name, email, password, confirmPassword, userType], 
+                       [nameError, emailError, passwordError, confirmPasswordError, userTypeError]);
+            
+            // Name validation
+            if (!name.value.trim()) {
+                showError(name, nameError, currentLanguage === 'en' ? 'Full name is required' : 'ପୂରା ନାମ ଆବଶ୍ୟକ');
+                isValid = false;
+            }
+            
+            // Email validation
+            if (!email.value) {
+                showError(email, emailError, currentLanguage === 'en' ? 'Email is required' : 'ଇମେଲ୍ ଆବଶ୍ୟକ');
+                isValid = false;
+            } else if (!isValidEmail(email.value)) {
+                showError(email, emailError, currentLanguage === 'en' ? 'Please enter a valid email address' : 'ଦୟାକରି ଏକ ବୈଧ ଇମେଲ୍ ଠିକଣା ପ୍ରବେଶ କରନ୍ତୁ');
+                isValid = false;
+            }
+            
+            // Password validation
+            if (!password.value) {
+                showError(password, passwordError, currentLanguage === 'en' ? 'Password is required' : 'ପାସୱାର୍ଡ୍ ଆବଶ୍ୟକ');
+                isValid = false;
+            } else if (password.value.length < 8) {
+                showError(password, passwordError, currentLanguage === 'en' ? 'Password must be at least 8 characters' : 'ପାସୱାର୍ଡ୍ ଅତିକମରେ 8 ଅକ୍ଷରର ହୋଇଥିବା ଉଚିତ');
+                isValid = false;
+            }
+            
+            // Confirm password validation
+            if (!confirmPassword.value) {
+                showError(confirmPassword, confirmPasswordError, currentLanguage === 'en' ? 'Please confirm your password' : 'ଦୟାକରି ଆପଣଙ୍କର ପାସୱାର୍ଡ୍ ନିଶ୍ଚିତ କରନ୍ତୁ');
+                isValid = false;
+            } else if (password.value !== confirmPassword.value) {
+                showError(confirmPassword, confirmPasswordError, currentLanguage === 'en' ? 'Passwords do not match' : 'ପାସୱାର୍ଡ୍ ମେଳ ଖାଉନାହିଁ');
+                isValid = false;
+            }
+            
+            // User type validation
+            if (!userType.value) {
+                showError(userType, userTypeError, currentLanguage === 'en' ? 'Please select your role' : 'ଦୟାକରି ଆପଣଙ୍କର ଭୂମିକା ଚୟନ କରନ୍ତୁ');
+                isValid = false;
+            }
+            
+            return isValid;
+        }
+        
+        function isValidEmail(email) {
+            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return re.test(email);
+        }
+        
+        function showError(input, errorElement, message) {
+            input.classList.add('error');
+            errorElement.textContent = message;
+            errorElement.style.display = 'block';
+        }
+        
+        function resetErrors(inputs, errorElements) {
+            inputs.forEach(input => {
+                input.classList.remove('error', 'success');
+            });
+            errorElements.forEach(error => {
+                error.style.display = 'none';
+            });
+        }
+        
+        function resetForm(form) {
+            form.reset();
+            const inputs = form.querySelectorAll('.form-control');
+            const errors = form.querySelectorAll('.error-message');
+            resetErrors(inputs, errors);
+            
+            // Reset password visibility toggles
+            const toggleIcons = form.querySelectorAll('.toggle-password i');
+            toggleIcons.forEach(icon => {
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            });
+            
+            const passwordInputs = form.querySelectorAll('input[type="text"][id*="Password"]');
+            passwordInputs.forEach(input => {
+                input.type = 'password';
+            });
+        }
+        
+        // Real-time validation for better UX
+        document.getElementById('loginEmail').addEventListener('blur', function() {
+            if (this.value && !isValidEmail(this.value)) {
+                showError(this, document.getElementById('loginEmailError'), currentLanguage === 'en' ? 'Please enter a valid email address' : 'ଦୟାକରି ଏକ ବୈଧ ଇମେଲ୍ ଠିକଣା ପ୍ରବେଶ କରନ୍ତୁ');
+            } else if (this.value) {
+                this.classList.remove('error');
+                this.classList.add('success');
+                document.getElementById('loginEmailError').style.display = 'none';
+            }
+        });
+        
+        document.getElementById('signupEmail').addEventListener('blur', function() {
+            if (this.value && !isValidEmail(this.value)) {
+                showError(this, document.getElementById('signupEmailError'), currentLanguage === 'en' ? 'Please enter a valid email address' : 'ଦୟାକରି ଏକ ବୈଧ ଇମେଲ୍ ଠିକଣା ପ୍ରବେଶ କରନ୍ତୁ');
+            } else if (this.value) {
+                this.classList.remove('error');
+                this.classList.add('success');
+                document.getElementById('signupEmailError').style.display = 'none';
+            }
+        });
+        
+        document.getElementById('signupPassword').addEventListener('input', function() {
+            if (this.value.length > 0 && this.value.length < 8) {
+                showError(this, document.getElementById('signupPasswordError'), currentLanguage === 'en' ? 'Password must be at least 8 characters' : 'ପାସୱାର୍ଡ୍ ଅତିକମରେ 8 ଅକ୍ଷରର ହୋଇଥିବା ଉଚିତ');
+            } else if (this.value.length >= 8) {
+                this.classList.remove('error');
+                this.classList.add('success');
+                document.getElementById('signupPasswordError').style.display = 'none';
+            }
+        });
+        
+        document.getElementById('signupConfirmPassword').addEventListener('input', function() {
+            const password = document.getElementById('signupPassword').value;
+            if (this.value !== password) {
+                showError(this, document.getElementById('signupConfirmPasswordError'), currentLanguage === 'en' ? 'Passwords do not match' : 'ପାସୱାର୍ଡ୍ ମେଳ ଖାଉନାହିଁ');
+            } else if (this.value === password && this.value.length > 0) {
+                this.classList.remove('error');
+                this.classList.add('success');
+                document.getElementById('signupConfirmPasswordError').style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
