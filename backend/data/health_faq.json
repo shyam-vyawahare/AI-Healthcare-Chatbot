@@ -1,0 +1,18 @@
+{
+    "general_health": [
+      {
+        "question": "What is a healthy diet?",
+        "answer": "A healthy diet includes fruits, vegetables, whole grains, lean proteins, and healthy fats. Limit processed foods, sugar, and salt."
+      },
+      {
+        "question": "How much water should I drink daily?",
+        "answer": "Adults should drink about 8-10 glasses (2-2.5 liters) of water daily, but needs vary based on activity level and climate."
+      }
+    ],
+    "vaccines": [
+      {
+        "question": "Why are vaccines important?",
+        "answer": "Vaccines protect you and others from serious diseases by building immunity without causing the illness."
+      }
+    ]
+  }

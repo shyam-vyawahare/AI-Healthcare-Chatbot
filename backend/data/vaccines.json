@@ -1,0 +1,18 @@
+{
+    "vaccines": [
+      {
+        "name": "COVID-19 Vaccine",
+        "age_group": "12+ years",
+        "doses": 2,
+        "booster": "Recommended after 6 months",
+        "side_effects": "Mild fever, fatigue, sore arm"
+      },
+      {
+        "name": "Flu Vaccine",
+        "age_group": "6 months+",
+        "doses": "1 annually",
+        "booster": "Yearly",
+        "side_effects": "Soreness, mild fever"
+      }
+    ]
+  }
