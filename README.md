@@ -134,3 +134,8 @@ This project is developed for educational and research purposes.
 # 🌟 Acknowledgement
 
 Special thanks to all contributors and open-source technologies that supported the development of this AI-powered healthcare solution.
+
+---
+
+# 💬 Note
+This project is currently under development, there maybe some bugs or invalid responses and answers given by the Aarogya AI can be wrong for some questions. Do not rely on an online AI advices for your health issues. Using this AI for healthcare is just an informative and awareness solution, consulting a real Doctor is always recommended.
