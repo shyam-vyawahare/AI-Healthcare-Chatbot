@@ -284,6 +284,16 @@ npm start
 
 ---
 
+# 🎓 Creators
+
+## Shyam Vyawahare 🍁
+Backend developer, API ans AI executive
+
+## Ashish Sarda 🍂
+Frontend Developer and AI Engineer
+
+---
+
 # 📄 License
 
 This project is developed for educational and research purposes.
