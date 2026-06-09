@@ -1,0 +1,50 @@
+{
+  "1e56ab28-3c80-4e2d-9557-d7a2600dfd71": {
+    "created_at": "2026-05-25T23:31:51.667226",
+    "message_count": 0,
+    "max_messages": 3,
+    "chat_history": []
+  },
+  "1313df1c-797a-4bc9-af6e-a59dcfdf1659": {
+    "created_at": "2026-05-25T23:31:51.993886",
+    "message_count": 0,
+    "max_messages": 3,
+    "chat_history": []
+  },
+  "da553173-572b-4446-af56-875ca98d82a5": {
+    "created_at": "2026-05-26T00:09:18.463570",
+    "message_count": 0,
+    "max_messages": 3,
+    "chat_history": []
+  },
+  "eb25d6f4-2cff-4e87-bb7b-cd64da0b6bdd": {
+    "created_at": "2026-05-30T13:51:11.555764",
+    "message_count": 0,
+    "max_messages": 3,
+    "chat_history": []
+  },
+  "755011ee-a7d6-4d1c-85f5-210ffcbefdb4": {
+    "created_at": "2026-06-03T04:20:23.028246",
+    "message_count": 3,
+    "max_messages": 3,
+    "chat_history": []
+  },
+  "059643da-8604-45c8-93fa-bc1e8b33c5fa": {
+    "created_at": "2026-06-04T13:21:39.271027",
+    "message_count": 0,
+    "max_messages": 3,
+    "chat_history": []
+  },
+  "5065f28b-6500-4605-8af2-3043feb5c014": {
+    "created_at": "2026-06-04T13:29:33.217211",
+    "message_count": 0,
+    "max_messages": 3,
+    "chat_history": []
+  },
+  "f1264a6b-bf6e-4fd4-a36f-084142e9500b": {
+    "created_at": "2026-06-04T13:29:55.812773",
+    "message_count": 0,
+    "max_messages": 3,
+    "chat_history": []
+  }
+}
