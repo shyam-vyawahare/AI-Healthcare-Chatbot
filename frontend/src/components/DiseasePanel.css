@@ -1,0 +1,250 @@
+/* Disease Panel Styles */
+.disease-panel {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    animation: slideInRight 0.3s ease;
+  }
+  
+  /* Panel Header */
+  .panel-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 1rem 1.5rem;
+    text-align: center;
+  }
+  
+  .panel-header h3 {
+    margin: 0;
+    font-size: 1.1rem;
+  }
+  
+  .panel-header p {
+    margin: 0.25rem 0 0;
+    font-size: 0.75rem;
+    opacity: 0.9;
+  }
+  
+  /* Search Box */
+  .search-box {
+    padding: 1rem;
+    position: relative;
+    border-bottom: 1px solid #e0e0e0;
+  }
+  
+  .search-box input {
+    width: 100%;
+    padding: 0.6rem 2rem 0.6rem 1rem;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    transition: all 0.3s ease;
+  }
+  
+  .search-box input:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  }
+  
+  .search-icon {
+    position: absolute;
+    right: 1.8rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #999;
+  }
+  
+  /* Disease List */
+  .disease-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0.5rem;
+    max-height: 300px;
+  }
+  
+  .disease-item {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    background: #f8f9fa;
+    border: none;
+    border-radius: 8px;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: left;
+  }
+  
+  .disease-item:hover {
+    background: #e8f5e9;
+    transform: translateX(5px);
+  }
+  
+  .disease-item.active {
+    background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+    border-left: 3px solid #4caf50;
+  }
+  
+  .disease-icon {
+    font-size: 1.2rem;
+  }
+  
+  .disease-name {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #333;
+  }
+  
+  /* Loading Spinner */
+  .loading-spinner {
+    text-align: center;
+    padding: 2rem;
+  }
+  
+  .spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid #667eea;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 1rem;
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  
+  /* No Results */
+  .no-results {
+    text-align: center;
+    padding: 2rem;
+    color: #999;
+  }
+  
+  /* Disease Info Section */
+  .disease-info {
+    border-top: 2px solid #e0e0e0;
+    padding: 1rem;
+    max-height: 400px;
+    overflow-y: auto;
+    background: #fafafa;
+  }
+  
+  .info-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #667eea;
+  }
+  
+  .info-header h4 {
+    margin: 0;
+    color: #333;
+    font-size: 1rem;
+  }
+  
+  .close-info {
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    color: #999;
+    transition: all 0.3s ease;
+  }
+  
+  .close-info:hover {
+    color: #f44336;
+    transform: scale(1.1);
+  }
+  
+  .info-section {
+    margin-bottom: 1rem;
+  }
+  
+  .info-section h5 {
+    margin: 0 0 0.5rem;
+    color: #667eea;
+    font-size: 0.85rem;
+  }
+  
+  .info-section ul {
+    margin: 0;
+    padding-left: 1.5rem;
+  }
+  
+  .info-section li {
+    margin: 0.25rem 0;
+    font-size: 0.8rem;
+    color: #555;
+    line-height: 1.4;
+  }
+  
+  .info-section.warning {
+    background: #fff3e0;
+    padding: 0.75rem;
+    border-radius: 8px;
+    border-left: 3px solid #ff9800;
+  }
+  
+  .info-section.warning h5 {
+    color: #e65100;
+  }
+  
+  .info-section.warning p {
+    margin: 0;
+    font-size: 0.8rem;
+    color: #555;
+  }
+  
+  .info-disclaimer {
+    margin-top: 1rem;
+    padding-top: 0.5rem;
+    border-top: 1px solid #e0e0e0;
+    text-align: center;
+  }
+  
+  .info-disclaimer small {
+    font-size: 0.7rem;
+    color: #999;
+  }
+  
+  /* Responsive */
+  @media (max-width: 768px) {
+    .disease-list {
+      max-height: 250px;
+    }
+    
+    .disease-info {
+      max-height: 350px;
+    }
+    
+    .panel-header {
+      padding: 0.75rem 1rem;
+    }
+    
+    .info-section li {
+      font-size: 0.75rem;
+    }
+  }
+  
+  @keyframes slideInRight {
+    from {
+      opacity: 0;
+      transform: translateX(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }

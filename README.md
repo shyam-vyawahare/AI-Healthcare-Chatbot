@@ -1,310 +1,138 @@
-🏥 AarogyaAI - AI Powered Healthcare Chatbot
+# 🏥 AarogyaAI - Multilingual Health Chatbot
 
-AarogyaAI is a multilingual AI-powered healthcare chatbot designed to provide accessible health information and guidance in multiple Indian languages. Built using React, Flask, and Google Gemini AI, the platform helps users understand common health concerns, receive symptom-based guidance, and access healthcare information in their preferred language.
-
----
-
-🌟 Features
-
-🤖 AI-Powered Healthcare Assistance
-
-- Symptom-based health guidance
-- Context-aware healthcare conversations
-- AI-generated responses using Google Gemini
-- Natural language understanding
-
-🌐 Multilingual Support
-
-Supports 6 languages:
-
-- English
-- Hindi (हिंदी)
-- Marathi (मराठी)
-- Tamil (தமிழ்)
-- Telugu (తెలుగు)
-- Bengali (বাংলা)
-
-🔍 Smart Language Detection
-
-- Automatically detects user language
-- Responds in the same language used by the user
-- No separate translation service required
-
-👤 User Authentication
-
-- Secure JWT-based authentication
-- User registration and login
-- Protected user sessions
-
-💬 Chat Management
-
-- Persistent conversation history
-- Session management
-- Easy access to previous chats
-
-📄 PDF Export
-
-- Export healthcare conversations as PDF
-- Download consultation summaries
-- Easy record keeping
-
-🚨 Emergency Detection
-
-- Detects potentially critical health situations
-- Provides emergency guidance
-- Encourages immediate medical attention when required
-
-🎁 Guest Mode
-
-- Use without registration
-- Limited free messages for quick access
-- Seamless upgrade to registered account
+> *"Because health info shouldn't need a translator."*
 
 ---
 
-🏗️ System Architecture
+## What is this?
 
-User
- │
- ▼
-React Frontend
- │
- ▼
-Flask REST API
- │
- ▼
-Google Gemini AI
- │
- ▼
-JSON Database
+AI chatbot that speaks **6 Indian languages** - English, Hindi, Marathi, Tamil, Telugu, Bengali.
 
-Architecture Flow:
+No copy-pasting into Google Translate. Just type in your language, get answers in the same language.
 
-Browser (React)
-      ↕
-Flask Backend API
-      ↕
-Google Gemini AI
-      ↕
-JSON Database
+**Try guest mode (3 free messages) or sign up.**
 
 ---
 
-⚙️ Tech Stack
+## Why We built this
 
-Frontend
+My grandmother speaks Hindi. Finding reliable health info in her language? Impossible.
 
-- React.js 18.2
-- Axios
-- CSS3
-- jsPDF
-- LocalStorage
+But here's the thing - it's not just her. It's millions of Indians across this country. From a small farm in Maharashtra to a busy clinic in Delhi NCR.
 
-Backend
+Health must be the first priority of every single person in India.
 
-- Python 3.10
-- Flask 3.0
-- JWT Authentication
-- REST APIs
+Not just for those who speak English. Not just for metro cities. For everyone.
 
-Artificial Intelligence
+Language should never be a barrier between a person and their well-being. Whether you're in a remote village or a tech park in Bangalore - you deserve to understand your health. In your own words. In your own language.
 
-- Google Gemini 2.0 Flash
-
-Database
-
-- JSON Database
+So We built this.
 
 ---
 
-🔄 Workflow
+## Tech Stack (short)
 
-1. User opens AarogyaAI.
-2. User selects Guest Mode or Login/Register.
-3. User chooses preferred language.
-4. User enters a healthcare-related query.
-5. React frontend sends request to Flask backend.
-6. Backend validates the request.
-7. Emergency detection module checks for critical symptoms.
-8. Query is forwarded to Google Gemini AI.
-9. Gemini detects language and generates a healthcare response.
-10. Response is returned in the user's language.
-11. Chat history is stored.
-12. User may export the conversation as PDF.
+| Layer | What |
+|-------|------|
+| Frontend | React 18, CSS3, Axios |
+| Backend | Python, Flask, JWT |
+| AI | Google Gemini 2.0 Flash |
+| Auth | JWT + SHA-256 |
+| DB | JSON (dev), LocalStorage |
+
+**Gemini handles BOTH health responses AND translation** - no external API costs.
 
 ---
 
-🔐 JWT Authentication Flow
+## Features that matter
 
-User Login
-     │
-     ▼
-Credential Verification
-     │
-     ▼
-JWT Token Generation
-     │
-     ▼
-Token Sent to Frontend
-     │
-     ▼
-Stored in LocalStorage
-     │
-     ▼
-Protected API Requests
-     │
-     ▼
-Token Verification
-     │
-     ▼
-Access Granted / Denied
+✅ **6 languages** - Real-time switching  
+✅ **Guest mode** - 3 messages, no signup  
+✅ **Emergency detection** - "heart attack" → "Call 108"  
+✅ **Chat history** - Date-wise in sidebar  
+✅ **PDF export** - Share with doctors  
+✅ **State persistence** - Refresh doesn't log you out  
+✅ **Dark theme** - Because why not
 
 ---
 
-📊 Project Highlights
+## Quick Start (2 min)
 
-Feature| Description
-AI Model| Google Gemini 2.0 Flash
-Languages Supported| 6
-Authentication| JWT
-Chat Persistence| LocalStorage + JSON DB
-User Modes| Guest & Registered
-PDF Export| Available
-Emergency Detection| Available
-Response Generation| AI Powered
-
----
-
-🚀 Installation
-
-Clone Repository
-
-git clone https://github.com/your-username/aarogya-ai.git
-cd aarogya-ai
-
----
-
-Backend Setup
-
+```bash
+# Backend
 cd backend
 pip install -r requirements.txt
+echo "GEMINI_API_KEY=your_key" > .env
 python app.py
 
-Backend runs on:
-
-http://localhost:5000
-
----
-
-Frontend Setup
-
+# Frontend (new terminal)
 cd frontend
 npm install
 npm start
+```
 
-Frontend runs on:
-
-http://localhost:3000
-
----
-
-📁 Project Structure
-
-AarogyaAI/
-│
-├── frontend/
-│   ├── src/
-│   ├── public/
-│   └── package.json
-│
-├── backend/
-│   ├── app.py
-│   ├── routes/
-│   ├── services/
-│   ├── database/
-│   └── requirements.txt
-│
-├── README.md
-└── .env
+Open `localhost:3000`
 
 ---
 
-🎯 Use Cases
+## What makes this different?
 
-- General healthcare guidance
-- Symptom understanding
-- Health awareness
-- Multilingual healthcare support
-- Quick medical information access
-- Educational healthcare assistance
-
----
-
-🔮 Future Scope
-
-- Voice-based interaction
-- Doctor appointment booking
-- Hospital locator integration
-- Medical image analysis
-- Electronic Health Records (EHR)
-- Mobile application deployment
-- Personalized healthcare recommendations
-- Wearable device integration
+| Feature | AarogyaAI | Others |
+|---------|-----------|--------|
+| Speaks Hindi/Marathi/Tamil | ✅ | ❌ |
+| Guest access | ✅ (3 msgs) | ❌ |
+| Remembers conversation | ✅ | ❌ |
+| PDF export | ✅ | ❌ |
 
 ---
 
-👨‍💻 Developed By
+## Challenges We fixed
 
-Final Year Engineering Project
-
-Department of Electronics & Computer Engineering
-
----
-
-⚠️ Important Note
-
-AarogyaAI uses Artificial Intelligence to generate healthcare-related responses. While every effort is made to provide useful and relevant information, AI-generated responses may occasionally be incomplete, inaccurate, outdated, or unsuitable for specific medical situations.
-
-Users should independently verify critical information before making healthcare decisions.
+- **Cut-off responses** → Increased token limit to 1200
+- **Slow translation** → Made Gemini do it natively
+- **Blank PDF export** → 2 days debugging html2canvas
+- **State loss on refresh** → localStorage sync
 
 ---
 
-🚑 Medical Disclaimer
+## What's next
 
-AarogyaAI is intended for educational and informational purposes only and does not provide professional medical diagnosis, treatment, or emergency care.
-
-The chatbot should not be considered a substitute for qualified healthcare professionals. Always consult a licensed doctor or healthcare provider for medical advice, diagnosis, treatment, or emergencies.
-
-If you are experiencing severe symptoms or a medical emergency, immediately contact emergency services or seek professional medical assistance.pip install -r requirements.txt
-python app.py
-Frontend Setup
-cd frontend
-npm install
-npm start
+- Voice input (for elderly users)
+- Mobile app (React Native)
+- Medicine reminders
+- PostgreSQL for production
 
 ---
 
-# 🎓 Creators
+## Team
 
-## Shyam Vyawahare 🍁
-Backend developer, API ans AI executive
-
-## Ashish Sarda 🍂
-Frontend Developer and AI Engineer
-
----
-
-# 📄 License
-
-This project is developed for educational and research purposes.
+| Name | Role |
+|------|------|
+| Ashish Sarda | Backend + AI integration |
+| Shyam Vyawahare | Frontend + Auth |
 
 ---
 
-# 🌟 Acknowledgement
+## Run in production?
 
-Special thanks to all contributors and open-source technologies that supported the development of this AI-powered healthcare solution.
+```bash
+# Backend: Gunicorn + Nginx
+# Frontend: Vercel / Netlify
+# Add PostgreSQL instead of JSON
+```
 
 ---
 
-# 💬 Note
-This project is currently under development, there maybe some bugs or invalid responses and answers given by the Aarogya AI can be wrong for some questions. Do not rely on an online AI advices for your health issues. Using this AI for healthcare is just an informative and awareness solution, consulting a real Doctor is always recommended.
+## License
+
+MIT - Use it, break it, fix it.
+
+---
+
+**⭐ Star this if it helped you. Helps me get interviews.**
+
+[GitHub Repo](https://github.com/Ashex360/AI-Healthcare-Chatbot) | [Live Demo](https://aarogyaai.example.com)
+
+---
+
+*3 weeks. Late nights. No boilerplate. Just code.*

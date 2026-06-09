@@ -1,0 +1,22 @@
+{
+  "ashishsarda121@gmail.com": {
+    "user_id": "1",
+    "email": "ashishsarda121@gmail.com",
+    "password": "f38b37465f4880a47d9176a55adcbc65c37a274983905fd47d90f1be290bfea4",
+    "name": "Ashish Sarda",
+    "age": "20",
+    "gender": "Male",
+    "created_at": "2026-05-26T00:04:10.159240",
+    "chat_history": []
+  },
+  "vaijanatha.y@gmail.com": {
+    "user_id": "2",
+    "email": "vaijanatha.y@gmail.com",
+    "password": "d52db5095bdb9689b663d66d3b965ca98d14b36184d4b5dcd2cfc6da0d63af5c",
+    "name": "Vaijanath",
+    "age": "52",
+    "gender": "Male",
+    "created_at": "2026-06-04T15:37:57.802197",
+    "chat_history": []
+  }
+}

@@ -1,438 +1,273 @@
-# backend/app.py
-from config import settings
-from fastapi import FastAPI, HTTPException, BackgroundTasks, Request, Depends
-from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse, HTMLResponse
-from fastapi.staticfiles import StaticFiles
-from fastapi.templating import Jinja2Templates
-import sqlite3
-import json
+"""
+Main Flask Application for AI Health Chatbot
+Handles API routes, request processing, and response generation
+"""
+
+from flask import Flask, request, jsonify, session
+from flask_cors import CORS
+from config import Config
+from ai_service import ai_service
+from disease_data import disease_db
+from auth import register_auth_routes
+from utils import (
+    validate_user_input, format_response_for_display, 
+    extract_symptoms_from_query, get_severity_indicator,
+    log_conversation, create_health_tip, is_medical_emergency_query,
+    get_language_name, generate_session_id
+)
 import logging
-import os
-from datetime import datetime, timedelta
-from typing import Dict, Any, Optional
-import asyncio
+from datetime import datetime
 
-# Import custom modules
-from services.nlp_engine import NPLEngine
-from services.translator import Translator
-from services.whatsapp_api import WhatsAppAPI
-from services.outbreak_alerts import OutbreakAlertSystem
-from services.tts import TextToSpeech
-from utils.logger import setup_logger
-from utils.helpers import validate_phone_number, sanitize_input
-from db.models import init_db, get_db_connection
+# Setup logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
-# Initialize logger
-logger = setup_logger(__name__)
+# Initialize Flask app
+app = Flask(__name__)
+app.config['SECRET_KEY'] = Config.SECRET_KEY
+app.config['JSON_AS_ASCII'] = False  # Support Unicode responses
 
-# Initialize FastAPI app
-app = FastAPI(
-    title="HealthMitra API",
-    description="AI-Driven Public Health Chatbot for Disease Awareness",
-    version="1.0.0"
-)
+# Enable CORS for React frontend
+CORS(app, origins=Config.CORS_ORIGINS, supports_credentials=True)
 
-# CORS middleware
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],  # For demo purposes; restrict in production
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+# Store conversation history (in production, use a database)
+conversation_store = {}
+register_auth_routes(app)
 
-# Initialize services
-nlp_engine = NPLEngine()
-translator = Translator()
-whatsapp_api = WhatsAppAPI()
-outbreak_alerts = OutbreakAlertSystem()
-tts = TextToSpeech()
+@app.route('/health', methods=['GET'])
+def health_check():
+    """Health check endpoint for the API"""
+    return jsonify({
+        'status': 'healthy',
+        'timestamp': datetime.now().isoformat(),
+        'ai_available': ai_service.is_available,
+        'supported_languages': translation_service.get_supported_languages()
+    }), 200
 
-# Mount static files and templates
-app.mount("/static", StaticFiles(directory="dashboard"), name="static")
-templates = Jinja2Templates(directory="dashboard")
-
-@app.on_event("startup")
-async def startup_event():
-    if settings.DEBUG:
-        logger.info("Running in DEBUG mode")
-    
-    # Use feature flags
-    if settings.FEATURE_WHATSAPP:
-        logger.info("WhatsApp feature enabled")
-        
-    """Initialize services on startup"""
-    logger.info("Initializing HealthMitra services...")
-    
-    # Initialize database
-    init_db()
-    
-    # Load health data
-    await load_health_data()
-    
-    # Start background tasks
-    asyncio.create_task(background_alert_checker())
-    
-    logger.info("HealthMitra services initialized successfully")
-
-async def load_health_data():
-    """Load health data from JSON files"""
+@app.route('/api/chat', methods=['POST'])
+def chat():
+    """Main chat endpoint with direct language response"""
     try:
-        data_dir = "data"
+        data = request.json
+        user_message = data.get('message', '')
+        session_id = data.get('session_id', generate_session_id())
+        target_language = data.get('language', 'en')  # User's preferred language
         
-        # Load FAQs
-        with open(f"{data_dir}/health_faq.json", "r", encoding="utf-8") as f:
-            app.state.faq_data = json.load(f)
+        logger.info(f"📝 Received: {user_message[:100]}...")
+        logger.info(f"🎯 Target language: {target_language}")
         
-        # Load vaccine data
-        with open(f"{data_dir}/vaccines.json", "r", encoding="utf-8") as f:
-            app.state.vaccine_data = json.load(f)
+        # Validate input
+        validation = validate_user_input(user_message)
+        if not validation['is_valid']:
+            return jsonify({'response': validation['message'], 'error': validation['message']}), 400
         
-        # Load outbreak data
-        with open(f"{data_dir}/outbreaks.json", "r", encoding="utf-8") as f:
-            app.state.outbreak_data = json.load(f)
-            
-        logger.info("Health data loaded successfully")
+        cleaned_message = validation['cleaned_text']
+        
+        # Get AI response DIRECTLY in target language (Gemini handles translation)
+        ai_result = ai_service.get_health_response(
+            cleaned_message, 
+            session_id, 
+            target_language
+        )
+        
+        response_text = ai_result['response']
+        
+        # Simulate thinking time for realistic feel (1-2 seconds)
+        import time
+        time.sleep(1.5)
+        
+        return jsonify({
+            'response': response_text,
+            'language': target_language,
+            'session_id': session_id,
+            'ai_source': ai_result.get('source', 'ai'),
+            'timestamp': datetime.now().isoformat()
+        }), 200
+        
     except Exception as e:
-        logger.error(f"Error loading health data: {str(e)}")
-
-# Background task for checking outbreak alerts
-async def background_alert_checker():
-    """Background task to check for outbreak alerts"""
-    while True:
-        try:
-            active_alerts = outbreak_alerts.check_active_alerts()
-            if active_alerts:
-                logger.info(f"Active outbreak alerts: {len(active_alerts)}")
-            
-            # Check every hour
-            await asyncio.sleep(3600)
-        except Exception as e:
-            logger.error(f"Error in background alert checker: {str(e)}")
-            await asyncio.sleep(300)  # Wait 5 minutes on error
-
-@app.get("/", response_class=HTMLResponse)
-async def read_root(request: Request):
-    """Serve the dashboard"""
-    return templates.TemplateResponse("index.html", {"request": request})
-
-@app.get("/api/health")
-async def health_check():
-    """Health check endpoint"""
-    return {
-        "status": "healthy",
-        "timestamp": datetime.now().isoformat(),
-        "service": "HealthMitra API"
+        logger.error(f"Chat error: {str(e)}")
+        return jsonify({'response': "I'm experiencing technical difficulties. Please try again. 🙏"}), 500
+    
+def get_emergency_response(language):
+    """Get emergency message in user's language"""
+    emergencies = {
+        'en': "🚨 MEDICAL EMERGENCY DETECTED 🚨\n\nPlease call emergency services (108 in India) or visit the nearest hospital immediately!\n\nDo not wait for online advice in case of emergency.",
+        'hi': "🚨 चिकित्सा आपातकाल का पता चला 🚨\n\nकृपया तुरंत आपातकालीन सेवाओं (108) को कॉल करें या निकटतम अस्पताल जाएं!\n\nआपातकाल में ऑनलाइन सलाह की प्रतीक्षा न करें।",
+        'mr': "🚨 वैद्यकीय आपातकाल आढळला 🚨\n\nकृपया त्वरित आपत्कालीन सेवांना (108) कॉल करा किंवा जवळच्या रुग्णालयात जा!\n\nआपत्कालीन परिस्थितीत ऑनलाइन सल्ल्याची प्रतीक्षा करू नका।",
+        'ta': "🚨 மருத்துவ அவசரநிலை கண்டறியப்பட்டது 🚨\n\nதயவுசெய்து அவசர சேவைகளை (108) அழைக்கவும் அல்லது உடனடியாக அருகிலுள்ள மருத்துவமனைக்குச் செல்லவும்!\n\nஅவசரநிலையில் ஆன்லைன் ஆலோசனைக்காக காத்திருக்க வேண்டாம்।"
     }
+    return emergencies.get(language, emergencies['en'])
 
-@app.post("/api/webhook/whatsapp")
-async def whatsapp_webhook(request: Request, background_tasks: BackgroundTasks):
-    """Webhook for WhatsApp messages"""
+@app.route('/api/disease/<disease_name>', methods=['GET'])
+def get_disease_info(disease_name):
+    """
+    Get detailed information about a specific disease
+    """
     try:
-        body = await request.json()
-        logger.info(f"Received WhatsApp webhook: {body}")
+        language = request.args.get('lang', 'en')
         
-        # Extract message details
-        message_data = whatsapp_api.parse_webhook(body)
+        # Get disease info from database
+        disease_info = disease_db.get_disease_info(disease_name)
         
-        if not message_data:
-            return JSONResponse(content={"status": "ignored"})
-        
-        user_phone = message_data["user_phone"]
-        user_message = message_data["message"]
-        message_id = message_data["message_id"]
-        
-        # Process message in background
-        background_tasks.add_task(
-            process_user_message,
-            user_phone,
-            user_message,
-            message_id,
-            "whatsapp"
-        )
-        
-        return JSONResponse(content={"status": "received"})
-        
-    except Exception as e:
-        logger.error(f"Error in WhatsApp webhook: {str(e)}")
-        raise HTTPException(status_code=500, detail="Internal server error")
-
-@app.post("/api/sms/webhook")
-async def sms_webhook(request: Request, background_tasks: BackgroundTasks):
-    """Webhook for SMS messages (for simulation)"""
-    try:
-        body = await request.json()
-        logger.info(f"Received SMS webhook: {body}")
-        
-        user_phone = body.get("phone")
-        user_message = body.get("message")
-        
-        if not user_phone or not user_message:
-            raise HTTPException(status_code=400, detail="Missing phone or message")
-        
-        # Process message in background
-        background_tasks.add_task(
-            process_user_message,
-            user_phone,
-            user_message,
-            f"sms_{datetime.now().timestamp()}",
-            "sms"
-        )
-        
-        return JSONResponse(content={"status": "received"})
-        
-    except Exception as e:
-        logger.error(f"Error in SMS webhook: {str(e)}")
-        raise HTTPException(status_code=500, detail="Internal server error")
-
-async def process_user_message(user_phone: str, user_message: str, message_id: str, channel: str):
-    """Process user message and send response"""
-    try:
-        # Sanitize input
-        user_phone = sanitize_input(user_phone)
-        user_message = sanitize_input(user_message)
-        
-        # Log interaction
-        log_interaction(user_phone, user_message, "user", channel)
-        
-        # Detect language and translate to English if needed
-        detected_lang = translator.detect_language(user_message)
-        if detected_lang != "en":
-            english_message = translator.translate_to_english(user_message)
-        else:
-            english_message = user_message
-        
-        # Process with NLP engine
-        nlp_response = nlp_engine.process_query(english_message)
-        
-        # Translate response back to user's language if needed
-        if detected_lang != "en":
-            final_response = translator.translate_from_english(nlp_response["response"], detected_lang)
-        else:
-            final_response = nlp_response["response"]
-        
-        # Generate voice message if needed
-        voice_url = None
-        if nlp_response.get("needs_voice", False):
-            voice_url = tts.generate_speech(final_response, detected_lang)
-        
-        # Send response via appropriate channel
-        if channel == "whatsapp":
-            await whatsapp_api.send_message(user_phone, final_response, voice_url)
-        elif channel == "sms":
-            # For SMS, we'd integrate with SMS service
-            # For demo, we'll just log it
-            logger.info(f"SMS Response to {user_phone}: {final_response}")
-        
-        # Log bot response
-        log_interaction(user_phone, final_response, "bot", channel, nlp_response)
-        
-        # Update analytics
-        update_analytics(user_phone, detected_lang, nlp_response["intent"])
-        
-    except Exception as e:
-        logger.error(f"Error processing user message: {str(e)}")
-        # Send error message to user
-        error_message = "Sorry, I'm having trouble processing your request. Please try again later."
-        if channel == "whatsapp":
-            await whatsapp_api.send_message(user_phone, error_message)
-        log_interaction(user_phone, error_message, "bot", channel, {"intent": "error"})
-
-def log_interaction(phone: str, message: str, sender: str, channel: str, metadata: Dict = None):
-    """Log user-bot interaction to database"""
-    try:
-        conn = get_db_connection()
-        cursor = conn.cursor()
-        
-        cursor.execute('''
-            INSERT INTO interactions (phone, message, sender, channel, metadata, timestamp)
-            VALUES (?, ?, ?, ?, ?, ?)
-        ''', (phone, message, sender, channel, 
-              json.dumps(metadata) if metadata else None, 
-              datetime.now()))
-        
-        conn.commit()
-        conn.close()
-    except Exception as e:
-        logger.error(f"Error logging interaction: {str(e)}")
-
-def update_analytics(phone: str, language: str, intent: str):
-    """Update analytics data"""
-    try:
-        conn = get_db_connection()
-        cursor = conn.cursor()
-        
-        # Update language stats
-        cursor.execute('''
-            INSERT OR REPLACE INTO language_stats (language, query_count, last_updated)
-            VALUES (?, COALESCE((SELECT query_count FROM language_stats WHERE language = ?), 0) + 1, ?)
-        ''', (language, language, datetime.now()))
-        
-        # Update intent stats
-        cursor.execute('''
-            INSERT OR REPLACE INTO intent_stats (intent, query_count, last_updated)
-            VALUES (?, COALESCE((SELECT query_count FROM intent_stats WHERE intent = ?), 0) + 1, ?)
-        ''', (intent, intent, datetime.now()))
-        
-        # Update user activity
-        cursor.execute('''
-            INSERT OR REPLACE INTO user_activity (phone, last_active, query_count)
-            VALUES (?, ?, COALESCE((SELECT query_count FROM user_activity WHERE phone = ?), 0) + 1)
-        ''', (phone, datetime.now(), phone))
-        
-        conn.commit()
-        conn.close()
-    except Exception as e:
-        logger.error(f"Error updating analytics: {str(e)}")
-
-@app.get("/api/analytics/summary")
-async def get_analytics_summary():
-    """Get analytics summary for dashboard"""
-    try:
-        conn = get_db_connection()
-        cursor = conn.cursor()
-        
-        # Total queries
-        cursor.execute('SELECT COUNT(*) FROM interactions WHERE sender = "user"')
-        total_queries = cursor.fetchone()[0]
-        
-        # Unique users
-        cursor.execute('SELECT COUNT(DISTINCT phone) FROM interactions')
-        unique_users = cursor.fetchone()[0]
-        
-        # Language distribution
-        cursor.execute('SELECT language, query_count FROM language_stats ORDER BY query_count DESC LIMIT 5')
-        language_stats = cursor.fetchall()
-        
-        # Top intents
-        cursor.execute('SELECT intent, query_count FROM intent_stats ORDER BY query_count DESC LIMIT 10')
-        intent_stats = cursor.fetchall()
-        
-        # Recent activity
-        cursor.execute('''
-            SELECT phone, last_active, query_count 
-            FROM user_activity 
-            ORDER BY last_active DESC 
-            LIMIT 10
-        ''')
-        recent_activity = cursor.fetchall()
-        
-        conn.close()
-        
-        return {
-            "total_queries": total_queries,
-            "unique_users": unique_users,
-            "language_distribution": [
-                {"language": lang, "count": count} for lang, count in language_stats
-            ],
-            "top_intents": [
-                {"intent": intent, "count": count} for intent, count in intent_stats
-            ],
-            "recent_activity": [
-                {"phone": phone, "last_active": last_active, "query_count": count}
-                for phone, last_active, count in recent_activity
-            ]
-        }
-        
-    except Exception as e:
-        logger.error(f"Error getting analytics summary: {str(e)}")
-        raise HTTPException(status_code=500, detail="Error retrieving analytics")
-
-@app.get("/api/outbreaks/active")
-async def get_active_outbreaks():
-    """Get active outbreak alerts"""
-    try:
-        active_alerts = outbreak_alerts.get_active_alerts()
-        return {"alerts": active_alerts}
-    except Exception as e:
-        logger.error(f"Error getting outbreak alerts: {str(e)}")
-        raise HTTPException(status_code=500, detail="Error retrieving outbreak alerts")
-
-@app.get("/api/faq/categories")
-async def get_faq_categories():
-    """Get FAQ categories"""
-    try:
-        categories = list(app.state.faq_data.keys())
-        return {"categories": categories}
-    except Exception as e:
-        logger.error(f"Error getting FAQ categories: {str(e)}")
-        raise HTTPException(status_code=500, detail="Error retrieving FAQ categories")
-
-@app.get("/api/faq/{category}")
-async def get_faq_by_category(category: str):
-    """Get FAQs by category"""
-    try:
-        if category not in app.state.faq_data:
-            raise HTTPException(status_code=404, detail="Category not found")
-        
-        return {"category": category, "faqs": app.state.faq_data[category]}
-    except HTTPException:
-        raise
-    except Exception as e:
-        logger.error(f"Error getting FAQs: {str(e)}")
-        raise HTTPException(status_code=500, detail="Error retrieving FAQs")
-
-@app.post("/api/query/test")
-async def test_query(query: Dict[str, str]):
-    """Test endpoint for query processing"""
-    try:
-        user_message = query.get("message", "")
-        language = query.get("language", "en")
-        
-        if not user_message:
-            raise HTTPException(status_code=400, detail="Message is required")
+        if not disease_info:
+            return jsonify({
+                'error': f'Disease "{disease_name}" not found',
+                'available_diseases': disease_db.get_all_diseases()
+            }), 404
         
         # Translate if needed
-        if language != "en":
-            english_message = translator.translate_to_english(user_message)
-        else:
-            english_message = user_message
+        if language != 'en':
+            disease_info = translation_service.translate_disease_info(disease_info, language)
         
-        # Process with NLP
-        nlp_response = nlp_engine.process_query(english_message)
-        
-        # Translate response back if needed
-        if language != "en":
-            final_response = translator.translate_from_english(nlp_response["response"], language)
-        else:
-            final_response = nlp_response["response"]
-        
-        return {
-            "original_query": user_message,
-            "processed_query": english_message,
-            "response": final_response,
-            "intent": nlp_response["intent"],
-            "confidence": nlp_response["confidence"],
-            "language": language
-        }
+        return jsonify({
+            'disease': disease_info,
+            'language': language
+        }), 200
         
     except Exception as e:
-        logger.error(f"Error in test query: {str(e)}")
-        raise HTTPException(status_code=500, detail="Error processing query")
+        logger.error(f"Disease info error: {str(e)}")
+        return jsonify({'error': 'Failed to fetch disease information'}), 500
 
-@app.get("/api/vaccines/schedule")
-async def get_vaccine_schedule(age_group: Optional[str] = None):
-    """Get vaccine schedule"""
+@app.route('/api/diseases', methods=['GET'])
+def list_diseases():
+    """
+    List all available diseases
+    """
     try:
-        vaccines = app.state.vaccine_data.get("vaccines", [])
+        language = request.args.get('lang', 'en')
+        diseases = disease_db.get_all_diseases()
         
-        if age_group:
-            vaccines = [v for v in vaccines if v.get("age_group") == age_group]
+        disease_list = []
+        for disease_key in diseases:
+            info = disease_db.get_disease_info(disease_key)
+            if language != 'en':
+                name = translation_service.translate_from_english(info['name'], language)
+            else:
+                name = info['name']
+            
+            disease_list.append({
+                'key': disease_key,
+                'name': name
+            })
         
-        return {"vaccines": vaccines}
+        return jsonify({
+            'diseases': disease_list,
+            'count': len(disease_list),
+            'language': language
+        }), 200
+        
     except Exception as e:
-        logger.error(f"Error getting vaccine schedule: {str(e)}")
-        raise HTTPException(status_code=500, detail="Error retrieving vaccine schedule")
+        logger.error(f"List diseases error: {str(e)}")
+        return jsonify({'error': 'Failed to fetch disease list'}), 500
 
-if __name__ == "__main__":
-    import uvicorn
+@app.route('/api/health-tip', methods=['GET'])
+def get_health_tip():
+    """
+    Get a random health tip
+    """
+    try:
+        language = request.args.get('lang', 'en')
+        tip = create_health_tip()
+        
+        if language != 'en':
+            tip['title'] = translation_service.translate_from_english(tip['title'], language)
+            tip['tip'] = translation_service.translate_from_english(tip['tip'], language)
+        
+        return jsonify(tip), 200
+        
+    except Exception as e:
+        logger.error(f"Health tip error: {str(e)}")
+        return jsonify({'title': 'Stay Healthy', 'tip': 'Regular checkups help prevent diseases'}), 200
+
+@app.route('/api/languages', methods=['GET'])
+def get_languages():
+    """
+    Get list of supported languages
+    """
+    try:
+        languages = translation_service.get_supported_languages()
+        return jsonify({
+            'languages': languages,
+            'default': 'en'
+        }), 200
+    except Exception as e:
+        logger.error(f"Languages endpoint error: {str(e)}")
+        return jsonify({'error': 'Failed to fetch languages'}), 500
+
+@app.route('/api/conversation/<session_id>', methods=['GET'])
+def get_conversation_history(session_id):
+    """
+    Get conversation history for a session
+    """
+    try:
+        history = conversation_store.get(session_id, [])
+        return jsonify({
+            'session_id': session_id,
+            'history': history,
+            'count': len(history)
+        }), 200
+    except Exception as e:
+        logger.error(f"Conversation history error: {str(e)}")
+        return jsonify({'error': 'Failed to fetch history'}), 500
+
+@app.route('/api/clear-conversation/<session_id>', methods=['DELETE'])
+def clear_conversation(session_id):
+    """
+    Clear conversation history for a session
+    """
+    try:
+        if session_id in conversation_store:
+            conversation_store[session_id] = []
+        return jsonify({
+            'session_id': session_id,
+            'message': 'Conversation cleared successfully'
+        }), 200
+    except Exception as e:
+        logger.error(f"Clear conversation error: {str(e)}")
+        return jsonify({'error': 'Failed to clear conversation'}), 500
+
+@app.route('/api/symptom-checker', methods=['POST'])
+def symptom_checker():
+    """
+    Basic symptom checker (educational only, not diagnostic)
+    """
+    try:
+        data = request.json
+        symptoms = data.get('symptoms', [])
+        
+        if not symptoms:
+            return jsonify({'error': 'No symptoms provided'}), 400
+        
+        severity_info = get_severity_indicator(symptoms)
+        
+        # Get general advice based on severity
+        if severity_info['severity'] == 'high':
+            advice = "Please seek immediate medical attention. Do not wait."
+        elif severity_info['severity'] == 'medium':
+            advice = "Consider consulting a healthcare provider within 24 hours."
+        else:
+            advice = "Monitor your symptoms. Rest, stay hydrated, and consult a doctor if symptoms worsen."
+        
+        return jsonify({
+            'symptoms_analyzed': symptoms,
+            'severity': severity_info['severity'],
+            'recommendation': severity_info['recommendation'],
+            'advice': advice,
+            'disclaimer': "⚠️ This is not a medical diagnosis. Always consult a qualified healthcare provider."
+        }), 200
+        
+    except Exception as e:
+        logger.error(f"Symptom checker error: {str(e)}")
+        return jsonify({'error': 'Failed to analyze symptoms'}), 500
+
+if __name__ == '__main__':
+    logger.info("🚀 Starting AI Health Chatbot Backend...")
+    logger.info(f"📍 Running on http://{Config.HOST}:{Config.PORT}")
+    logger.info(f"🤖 AI Available: {ai_service.is_available}")
+    logger.info(f"🌐 Supported Languages: {list(Config.SUPPORTED_LANGUAGES.keys())}")
     
-    # Run the app
-    uvicorn.run(
-        "app:app",
-        host="0.0.0.0",
-        port=8000,
-        reload=True,  # Enable auto-reload for development
-        log_level="info"
+    app.run(
+        host=Config.HOST,
+        port=Config.PORT,
+        debug=Config.DEBUG
     )

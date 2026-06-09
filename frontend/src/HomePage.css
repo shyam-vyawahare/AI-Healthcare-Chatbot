@@ -1,0 +1,349 @@
+/* HomePage - Black & White Minimalist Design */
+
+.homepage {
+    min-height: 100vh;
+    background: #ffffff;
+    position: relative;
+    overflow-x: hidden;
+  }
+  
+  .homepage-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+    z-index: 0;
+    transition: background 0.1s ease;
+  }
+  
+  .homepage-content {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 2rem 3rem;
+    position: relative;
+    z-index: 1;
+  }
+  
+  /* Header */
+  .home-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 4rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #eaeaea;
+  }
+  
+  .home-logo {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  
+  .logo-symbol {
+    font-size: 1.25rem;
+    font-weight: 500;
+    color: #1a1a1a;
+  }
+  
+  .logo-text {
+    font-size: 0.875rem;
+    font-weight: 500;
+    letter-spacing: -0.3px;
+    color: #1a1a1a;
+  }
+  
+  .home-actions {
+    display: flex;
+    gap: 0.75rem;
+  }
+  
+  .home-btn-outline {
+    background: transparent;
+    border: 1px solid #e0e0e0;
+    padding: 0.5rem 1rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: inherit;
+    color: #1a1a1a;
+    transition: all 0.2s;
+  }
+  
+  .home-btn-outline:hover {
+    background: #f5f5f5;
+  }
+  
+  .home-btn-primary {
+    background: #1a1a1a;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.2s;
+  }
+  
+  .home-btn-primary:hover {
+    background: #333;
+  }
+  
+  /* Hero Section */
+  .hero-section {
+    text-align: center;
+    margin-bottom: 4rem;
+  }
+  
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: #f5f5f5;
+    padding: 0.35rem 0.75rem;
+    font-size: 0.7rem;
+    color: #666;
+    margin-bottom: 2rem;
+  }
+  
+  .badge-dot {
+    width: 6px;
+    height: 6px;
+    background: #1a1a1a;
+    border-radius: 50%;
+  }
+  
+  .hero-title {
+    font-size: 3rem;
+    font-weight: 500;
+    letter-spacing: -1px;
+    color: #1a1a1a;
+    margin-bottom: 1rem;
+    line-height: 1.2;
+  }
+  
+  .hero-typed {
+    font-size: 1rem;
+    color: #666;
+    margin-bottom: 2rem;
+    font-family: monospace;
+  }
+  
+  .typed-cursor {
+    animation: blink 1s infinite;
+  }
+  
+  @keyframes blink {
+    0%, 50% { opacity: 1; }
+    51%, 100% { opacity: 0; }
+  }
+  
+  /* Quick Actions */
+  .quick-actions {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 3rem;
+  }
+  
+  .quick-action-btn {
+    background: transparent;
+    border: 1px solid #e0e0e0;
+    padding: 0.5rem 1rem;
+    font-size: 0.75rem;
+    cursor: pointer;
+    font-family: inherit;
+    color: #333;
+    transition: all 0.2s;
+  }
+  
+  .quick-action-btn:hover {
+    background: #f5f5f5;
+    border-color: #1a1a1a;
+  }
+  
+  /* Guest Card */
+  .guest-card {
+    background: #fafafa;
+    border: 1px solid #eaeaea;
+    padding: 1.5rem;
+    margin-bottom: 4rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  
+  .guest-card-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  
+  .guest-icon {
+    font-size: 2rem;
+  }
+  
+  .guest-card-header h3 {
+    font-size: 1rem;
+    font-weight: 500;
+    margin: 0 0 0.25rem;
+    color: #1a1a1a;
+  }
+  
+  .guest-card-header p {
+    font-size: 0.75rem;
+    color: #666;
+    margin: 0;
+  }
+  
+  .guest-start-btn {
+    background: #1a1a1a;
+    color: white;
+    border: none;
+    padding: 0.6rem 1.25rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.2s;
+  }
+  
+  .guest-start-btn:hover {
+    background: #333;
+  }
+  
+  .guest-features {
+    display: flex;
+    gap: 1rem;
+    font-size: 0.7rem;
+    color: #888;
+  }
+  
+  /* Features Grid */
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2rem;
+    margin-bottom: 4rem;
+    padding: 2rem 0;
+    border-top: 1px solid #eaeaea;
+    border-bottom: 1px solid #eaeaea;
+  }
+  
+  .feature-item {
+    text-align: center;
+  }
+  
+  .feature-icon {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .feature-item h4 {
+    font-size: 0.75rem;
+    font-weight: 600;
+    margin: 0 0 0.25rem;
+    color: #1a1a1a;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  
+  .feature-item p {
+    font-size: 0.7rem;
+    color: #888;
+    margin: 0;
+  }
+  
+  /* Navigation Links */
+  .nav-links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 3rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid #eaeaea;
+  }
+  
+  .nav-link {
+    font-size: 0.7rem;
+    color: #666;
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  
+  .nav-link:hover {
+    color: #1a1a1a;
+  }
+  
+  /* Footer */
+  .home-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+    font-size: 0.7rem;
+    color: #999;
+  }
+  
+  .footer-social {
+    display: flex;
+    gap: 1rem;
+  }
+  
+  .social-link {
+    color: #999;
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  
+  .social-link:hover {
+    color: #1a1a1a;
+  }
+  
+  .footer-copyright {
+    display: flex;
+    gap: 1rem;
+  }
+  
+  /* Responsive */
+  @media (max-width: 768px) {
+    .homepage-content {
+      padding: 1rem 1.5rem;
+    }
+    
+    .hero-title {
+      font-size: 2rem;
+    }
+    
+    .features-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+    }
+    
+    .guest-card {
+      flex-direction: column;
+      text-align: center;
+    }
+    
+    .guest-card-header {
+      flex-direction: column;
+    }
+    
+    .nav-links {
+      max-height: 200px;
+      overflow-y: auto;
+    }
+    
+    .home-footer {
+      flex-direction: column;
+      text-align: center;
+    }
+  }

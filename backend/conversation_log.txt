@@ -1,0 +1,95 @@
+[2026-05-20 22:00:08] LANG:en | SUCCESS:True | USER:mazhya pota madhe khup dukhtay ani mazh dok pan | BOT:I understand you're asking about health. While I'm an AI assistant, I can provide general health inf
+[2026-05-20 22:02:05] LANG:en | SUCCESS:True | USER:thikye mag mi kay karu | BOT:I understand you're asking about health. While I'm an AI assistant, I can provide general health inf
+[2026-05-20 22:02:16] LANG:en | SUCCESS:True | USER:i have a fever | BOT:Fever often indicates your body is fighting an infection. Get plenty of rest, stay hydrated, and mon
+[2026-05-20 22:02:33] LANG:en | SUCCESS:True | USER:are you understand marathi | BOT:I understand you're asking about health. While I'm an AI assistant, I can provide general health inf
+[2026-05-20 22:03:17] LANG:hi | SUCCESS:True | USER:मला COVID-19 ची लक्षणे आणि प्रतिबंध याबद्दल सांगा | BOT:COVID-19 symptoms include fever, cough, and difficulty breathing. Prevention: Get vaccinated, wear m
+[2026-05-20 22:03:35] LANG:hi | SUCCESS:True | USER:बुखार के लक्षण क्या हैं और इसका प्रबंधन कैसे करें? | BOT:Fever often indicates your body is fighting an infection. Get plenty of rest, stay hydrated, and mon
+[2026-05-20 22:03:49] LANG:en | SUCCESS:True | USER:hi | BOT:I understand you're asking about health. While I'm an AI assistant, I can provide general health inf
+[2026-05-20 22:10:24] LANG:en | SUCCESS:True | USER:hi | BOT:I understand you're asking about health. While I'm an AI assistant, I can provide general health inf
+[2026-05-20 22:11:54] LANG:en | SUCCESS:True | USER:What are the symptoms of fever and how should I manage it? | BOT:Fever often indicates your body is fighting an infection. Get plenty of rest, stay hydrated, and mon
+[2026-05-20 22:14:31] LANG:en | SUCCESS:True | USER:What are the symptoms of fever and how should I manage it? | BOT:Fever often indicates your body is fighting an infection. Get plenty of rest, stay hydrated, and mon
+[2026-05-21 21:25:52] LANG:en | SUCCESS:True | USER:hi | BOT:I understand you're asking about health. While I'm an AI assistant, I can provide general health inf
+[2026-05-21 21:31:59] LANG:en | SUCCESS:True | USER:hi | BOT:I understand you're asking about health. While I'm an AI assistant, I can provide general health inf
+[2026-05-21 21:36:30] LANG:en | SUCCESS:True | USER:hi | BOT:I understand you're asking about health. While I'm an AI assistant, I can provide general health inf
+[2026-05-21 21:36:51] LANG:en | SUCCESS:True | USER:i have a fever | BOT:Fever often indicates your body is fighting an infection. Get plenty of rest, stay hydrated, and mon
+[2026-05-21 21:36:59] LANG:en | SUCCESS:True | USER:what i do | BOT:I understand you're asking about health. While I'm an AI assistant, I can provide general health inf
+[2026-05-21 21:38:05] LANG:en | SUCCESS:True | USER:hi | BOT:I understand you're asking about health. While I'm an AI assistant, I can provide general health inf
+[2026-05-21 21:54:08] LANG:en | SUCCESS:True | USER:hii | BOT:Hello! As a Public Health Assistant, I am here
+
+⚠️ Remember: I'm an AI assistant, not a doctor. Plea
+[2026-05-21 21:54:19] LANG:en | SUCCESS:True | USER:i have fever | BOT:I am sorry to hear you are not feeling
+
+⚠️ Remember: I'm an AI assistant, not a doctor. Please consu
+[2026-05-21 21:54:48] LANG:en | SUCCESS:True | USER:i have a fever with some cold | BOT:I am sorry to hear you are feeling unwell
+
+⚠️ Remember: I'm an AI assistant, not a doctor. Please co
+[2026-05-21 21:54:59] LANG:en | SUCCESS:True | USER:what i do | BOT:I am here to help, but please note
+
+⚠️ Remember: I'm an AI assistant, not a doctor. Please consult a
+[2026-05-21 21:55:18] LANG:en | SUCCESS:True | USER:ok then what can you help | BOT:As a Public health Assistant AI, I am
+
+⚠️ Remember: I'm an AI assistant, not a doctor. Please consul
+[2026-05-21 21:55:46] LANG:en | SUCCESS:True | USER:can you help me to analize my symtoms | BOT:I can certainly share some general information to help you understand
+
+⚠️ Remember: I'm an AI assist
+[2026-05-21 21:55:56] LANG:en | SUCCESS:True | USER:yes sure | BOT:Hello! As a Public Health Assistant, I am
+
+⚠️ Remember: I'm an AI assistant, not a doctor. Please co
+[2026-05-22 22:27:19] LANG:en | SUCCESS:True | USER:Hii | BOT:💚 I'm here to help with health questions! Could you please share:
+
+• What symptoms are you experienc
+[2026-05-22 22:27:40] LANG:en | SUCCESS:True | USER:i have a fever from last 2 hours | BOT:Since you have only had a fever for the last two hours
+
+⚠️ Remember: I'm an AI assistant, not a doct
+[2026-05-22 22:27:53] LANG:en | SUCCESS:True | USER:what i do | BOT:If you are feeling generally unwell, run down, or are
+
+⚠️ Remember: I'm an AI assistant, not a docto
+[2026-05-22 22:28:23] LANG:en | SUCCESS:True | USER:also i have some headache | BOT:Experiencing a headache can be very uncomfortable, but most common headaches
+
+⚠️ Remember: I'm an AI
+[2026-05-22 22:28:48] LANG:en | SUCCESS:True | USER:mala | BOT:💚 I'm here to help with health questions! Could you please share:
+
+• What symptoms are you experienc
+[2026-05-22 22:28:56] LANG:hi | SUCCESS:True | USER:तापाची लक्षणे काय आहेत आणि ते कसे व्यवस्थापित करावे? | BOT:🌡️ Managing fever:
+
+• Rest and stay in a cool, comfortable environment
+• Drink plenty of fluids (wat
+[2026-05-22 22:30:13] LANG:en | SUCCESS:True | USER:also i have cold | BOT:Dealing with a cold can be very uncomfortable, but most
+
+⚠️ Remember: I'm an AI assistant, not a doc
+[2026-05-22 22:38:31] LANG:en | SUCCESS:True | USER:hiii | BOT:Hello! How can I help you today? If you are experiencing any specific symptoms or have health-relate
+[2026-05-22 22:38:56] LANG:en | SUCCESS:True | USER:i have dry cough | BOT:A dry cough can be very uncomfortable, but there are several practical steps and home remedies you c
+[2026-05-22 22:39:18] LANG:en | SUCCESS:True | USER:yes give me | BOT:To help you manage mild seasonal symptoms or a common cold, it is highly beneficial to prioritize ph
+[2026-05-22 22:39:44] LANG:en | SUCCESS:True | USER:ok is any medicene | BOT:Because you didn't mention your specific symptoms, it is difficult to recommend a precise medication
+[2026-05-22 22:46:08] LANG:en | SUCCESS:True | USER:hii | BOT:Hi there!
+
+I'm ready to help you with any health questions you might have. Please tell me what's on 
+[2026-05-22 22:46:21] LANG:en | SUCCESS:True | USER:i have fever and cold | BOT:Hi there! Thanks for letting me know.
+
+It sounds like you're dealing with some uncomfortable symptom
+[2026-05-22 22:47:19] LANG:en | SUCCESS:True | USER:also i have a small headache | BOT:Thanks for letting me know about the headache. It's very common to experience a headache when you ha
+[2026-05-22 22:48:58] LANG:en | SUCCESS:True | USER:hello | BOT:Hello again!
+
+How are you feeling now? I hope the tips we discussed for your fever, cold, and headac
+[2026-05-22 22:52:50] LANG:en | SUCCESS:True | USER:now its fine but can you suggest when i need to visit hospital | BOT:That's great news to hear that you're feeling fine now! It's always a relief when symptoms start to 
+[2026-05-22 23:00:08] LANG:en | SUCCESS:True | USER:hii | BOT:Hi there!
+
+It's great to hear from you. I'm here to help answer any health questions you might have.
+[2026-05-22 23:01:10] LANG:en | SUCCESS:True | USER:i have a fever from last 2 hours also before 1 night i have some pain in my throt and now i have hea | BOT:Hi there! Thanks for sharing what's going on. It sounds like you're not feeling well at all, with th
+[2026-05-22 23:05:28] LANG:en | SUCCESS:True | USER:hii | BOT:Hii there, bestie! So good to hear from you! 👋
+
+I'm here and ready to help you with any health quest
+[2026-05-22 23:06:25] LANG:en | SUCCESS:True | USER:i have a fever from last 2 hours and small  headache from last 10 min what i do | BOT:Oh no, I'm so sorry to hear you're not feeling well, bestie! Thanks for letting me know what's going
+[2026-05-22 23:06:54] LANG:en | SUCCESS:True | USER:suggest me solution | BOT:Oh no, bestie, I'm really sorry to hear you're feeling even worse! A fever and headache can definite
+[2026-05-22 23:08:03] LANG:en | SUCCESS:True | USER:ok also i have some pain on my throat from last night | BOT:Oh no, bestie, a sore throat on top of the fever and headache? That really sounds rough! I'm so sorr
+[2026-05-22 23:26:57] LANG:en | SUCCESS:True | USER:hii | BOT:💚 I'm here to help with health questions! Could you please share:
+
+• What symptoms are you experienc
+[2026-05-22 23:27:14] LANG:en | SUCCESS:True | USER:i have a small throte pain | BOT:💚 I'm here to help with health questions! Could you please share:
+
+• What symptoms are you experienc
+[2026-05-24 11:04:41] LANG:en | SUCCESS:True | USER:hii | BOT:Hey there! 👋 It's your health bestie here, ready to help!
+
+What's on your mind today? Pop your healt
+[2026-05-24 11:05:34] LANG:en | SUCCESS:True | USER:i have slight dry cold | BOT:Oh, a "slight dry cold," huh? That's no fun at all, especially with that dry feeling! 🤧 It sounds li
+[2026-05-24 11:06:35] LANG:en | SUCCESS:True | USER:i have dry cold | BOT:Oh no, feeling dry and cold when you're under the weather is just the pits! It sounds like you might
