@@ -14,11 +14,19 @@ No copy-pasting into Google Translate. Just type in your language, get answers i
 
 ---
 
-## Why I built this
+## Why We built this
 
-My grandmother speaks Marathi. Finding reliable health info in her language? Impossible.
+My grandmother speaks Hindi. Finding reliable health info in her language? Impossible.
 
-So I built this.
+But here's the thing - it's not just her. It's millions of Indians across this country. From a small farm in Maharashtra to a busy clinic in Delhi NCR.
+
+Health must be the first priority of every single person in India.
+
+Not just for those who speak English. Not just for metro cities. For everyone.
+
+Language should never be a barrier between a person and their well-being. Whether you're in a remote village or a tech park in Bangalore - you deserve to understand your health. In your own words. In your own language.
+
+So We built this.
 
 ---
 
@@ -78,7 +86,7 @@ Open `localhost:3000`
 
 ---
 
-## Challenges I fixed
+## Challenges We fixed
 
 - **Cut-off responses** → Increased token limit to 1200
 - **Slow translation** → Made Gemini do it natively
@@ -100,8 +108,8 @@ Open `localhost:3000`
 
 | Name | Role |
 |------|------|
-| Ashish Sarda | Frontend + AI integration |
-| Shyam Vyawahare | Backend + Auth |
+| Ashish Sarda | Backend + AI integration |
+| Shyam Vyawahare | Frontend + Auth |
 
 ---
 
@@ -123,7 +131,7 @@ MIT - Use it, break it, fix it.
 
 **⭐ Star this if it helped you. Helps me get interviews.**
 
-[GitHub Repo](https://github.com/yourusername/AarogyaAI) | [Live Demo](https://aarogyaai.example.com)
+[GitHub Repo](https://github.com/Ashex360/AI-Healthcare-Chatbot) | [Live Demo](https://aarogyaai.example.com)
 
 ---
 
