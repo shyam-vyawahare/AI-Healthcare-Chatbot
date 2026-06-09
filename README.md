@@ -109,7 +109,7 @@ Open `localhost:3000`
 | Name | Role |
 |------|------|
 | Ashish Sarda | Backend + AI integration |
-| Shyam Vyawahare | Frontend + Auth |
+| Shyam Vyawahare | Frontend + Auth + AI Testing |
 
 ---
 
