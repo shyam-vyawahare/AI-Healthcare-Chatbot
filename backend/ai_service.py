@@ -354,6 +354,5 @@ Language code:"""
                 response_text = response_text + '.'
         
         return response_text
-
-
+        
 ai_service = AIService()
