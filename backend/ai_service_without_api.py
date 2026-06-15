@@ -340,5 +340,4 @@ What would you like to know about today?""",
             "source": "default_response"
         }
 
-
 ai_service = AIService()
