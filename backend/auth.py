@@ -357,7 +357,6 @@ def register_auth_routes(app):
         """Logout (client-side token removal)"""
         return jsonify({'message': 'Logged out successfully'}), 200
 
-
 # Conversation store for users (persistent)
 user_conversation_store = {}
 
