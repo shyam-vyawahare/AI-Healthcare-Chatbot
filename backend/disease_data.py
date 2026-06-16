@@ -191,6 +191,5 @@ class DiseaseData:
         disease = self.diseases.get(disease_key.lower())
         return disease['symptoms'] if disease else []
 
-
 # Create a singleton instance
 disease_db = DiseaseData()
