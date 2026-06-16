@@ -217,6 +217,5 @@ class GoogleTranslateService:
             for code, name in self.supported_languages.items()
         ]
 
-
 # Create a singleton instance
 google_translate_service = GoogleTranslateService()
