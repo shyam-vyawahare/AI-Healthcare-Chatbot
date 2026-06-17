@@ -53,6 +53,5 @@ class TranslationService:
             for code, name in self.supported_languages.items()
         ]
 
-
 # Create a singleton instance
 translation_service = TranslationService()
