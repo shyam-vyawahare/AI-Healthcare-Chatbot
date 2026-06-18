@@ -293,6 +293,5 @@ class HuggingFaceTranslateService:
         
         return text
 
-
 # Create singleton instance
 huggingface_translate_service = HuggingFaceTranslateService()
