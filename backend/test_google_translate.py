@@ -1,5 +1,6 @@
 from google_translate_service import google_translate_service
 
+# Main function for language translations
 def test_translations():
     print("=" * 60)
     print("Testing Google Cloud Translate API")
