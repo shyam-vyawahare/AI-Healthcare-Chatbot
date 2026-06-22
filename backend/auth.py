@@ -3,6 +3,7 @@ Authentication and User Management
 JWT-based auth with guest session tracking
 """
 
+# Imports for Auth
 import jwt
 import hashlib
 import json
