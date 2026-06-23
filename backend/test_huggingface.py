@@ -1,5 +1,6 @@
 from huggingface_translate_service import huggingface_translate_service
 
+# Main function ti handle translations
 def test_translations():
     print("=" * 60)
     print("Testing HuggingFace Translation Service")
