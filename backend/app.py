@@ -3,6 +3,7 @@ Main Flask Application for AI Health Chatbot
 Handles API routes, request processing, and response generation
 """
 
+# Important Imports
 from flask import Flask, request, jsonify, session
 from flask_cors import CORS
 from config import Config
