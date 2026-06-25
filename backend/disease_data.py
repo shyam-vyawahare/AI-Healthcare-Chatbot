@@ -5,7 +5,8 @@ Static database of diseases with symptoms, prevention, and care tips
 
 class DiseaseData:
     """Class to manage disease information"""
-    
+
+    # Function for Deseases Data and their symptoms
     def __init__(self):
         self.diseases = {
             "covid19": {
